@@ -7,7 +7,7 @@
 ## 技术栈
 
 - Vue 3 + Vite 3 + TypeScript
-- pnpm 7（通过 `package.json` 的 `packageManager` 字段锁定版本）
+- pnpm 9（通过 `package.json` 的 `packageManager` 字段锁定版本，CI 同步时自动注入）
 - 构建输出目录：`dist`
 
 ## 部署架构
@@ -61,14 +61,15 @@ pages_build_output_dir = "./dist"
 
 ### package.json 中的关键字段
 
-- `"packageManager": "pnpm@7.33.7"` — 锁定 pnpm 版本，避免 lock 文件格式不兼容
+- `"packageManager": "pnpm@9.15.9"` — 锁定 pnpm 版本，避免 lock 文件格式不兼容（上游没有此字段，CI 同步时自动注入）
 
 ## 踩坑记录
 
 1. **pnpm-lock.yaml 包含淘宝镜像源地址**：Cloudflare 构建环境无法访问 npmmirror，需要用官方 registry 重新生成 lock 文件
-2. **pnpm 版本不匹配**：Cloudflare 默认使用 pnpm 10，与本地 pnpm 7 生成的 lock 文件格式不兼容，通过 `packageManager` 字段解决
+2. **pnpm 版本不匹配**：上游使用 pnpm 9（lockfile v9），CI 需要匹配使用 pnpm 9，通过 `packageManager` 字段和 workflow 中的 `version: 9` 解决
 3. **`wrangler deploy` vs `wrangler pages deploy`**：Pages 项目必须使用 `wrangler pages deploy`，前者是 Workers 的部署命令
 4. **上游同步冲突**：不使用 git merge，改用完全覆盖 + 还原自有文件的策略，彻底避免冲突
+5. **上游同步覆盖 packageManager**：`git checkout upstream/master -- .` 会用上游的 `package.json` 覆盖本地的，而上游没有 `packageManager` 字段，导致 pnpm 版本不受控。解决方案：在同步步骤中用 node 脚本注入 `packageManager` 字段
 
 ## 已清理的历史配置
 
