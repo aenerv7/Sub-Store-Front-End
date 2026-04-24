@@ -1,7 +1,6 @@
 {
   "name": "sub-store-front-end",
-  "packageManager": "pnpm@9.15.9",
-  "version": "2.16.60",
+  "version": "2.16.61",
   "private": true,
   "scripts": {
     "dev": "vite --host",
@@ -76,5 +75,6 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^0.35.2",
     "workbox-window": "^7.0.0"
-  }
+  },
+  "packageManager": "pnpm@9.15.9"
 }
