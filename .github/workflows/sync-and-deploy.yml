@@ -96,7 +96,10 @@ jobs:
 
       - name: Install dependencies
         if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
-        run: pnpm install --no-frozen-lockfile
+        run: |
+          # 删除上游 lock 文件（包含 npmmirror 淘宝镜像源，CI 无法访问）
+          rm -f pnpm-lock.yaml
+          pnpm install --no-frozen-lockfile
 
       - name: Build
         if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'

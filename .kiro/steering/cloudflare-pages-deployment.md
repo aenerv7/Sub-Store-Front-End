@@ -65,7 +65,7 @@ pages_build_output_dir = "./dist"
 
 ## 踩坑记录
 
-1. **pnpm-lock.yaml 包含淘宝镜像源地址**：Cloudflare 构建环境无法访问 npmmirror，需要用官方 registry 重新生成 lock 文件
+1. **pnpm-lock.yaml 包含淘宝镜像源地址**：上游开发者使用 npmmirror 镜像，lock 文件中 tarball URL 指向 `registry.npmmirror.com`，GitHub Actions 环境无法访问。解决方案：CI 中 `pnpm install` 前先 `rm -f pnpm-lock.yaml`，让 pnpm 用官方 registry 重新解析依赖
 2. **pnpm 版本不匹配**：上游使用 pnpm 9（lockfile v9），CI 需要匹配使用 pnpm 9，通过 `packageManager` 字段和 workflow 中的 `version: 9` 解决
 3. **`wrangler deploy` vs `wrangler pages deploy`**：Pages 项目必须使用 `wrangler pages deploy`，前者是 Workers 的部署命令
 4. **上游同步冲突**：不使用 git merge，改用完全覆盖 + 还原自有文件的策略，彻底避免冲突
