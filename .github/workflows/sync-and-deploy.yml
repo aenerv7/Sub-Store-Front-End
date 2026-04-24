@@ -1,0 +1,84 @@
+name: Sync upstream release and deploy to Cloudflare Pages
+
+on:
+  schedule:
+    # 每小时检查一次上游是否有新 release
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get latest upstream release tag
+        id: upstream
+        run: |
+          LATEST_TAG=$(curl -s https://api.github.com/repos/sub-store-org/Sub-Store-Front-End/releases/latest | jq -r '.tag_name')
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest upstream release: $LATEST_TAG"
+
+      - name: Get current local version
+        id: local
+        run: |
+          LOCAL_VERSION=$(node -e "process.stdout.write(require('./package.json').version)")
+          echo "version=$LOCAL_VERSION" >> $GITHUB_OUTPUT
+          echo "Current local version: $LOCAL_VERSION"
+
+      - name: Check if update is needed
+        id: check
+        run: |
+          UPSTREAM="${{ steps.upstream.outputs.tag }}"
+          LOCAL="${{ steps.local.outputs.version }}"
+          # 去掉 tag 中可能的 v 前缀
+          UPSTREAM_CLEAN="${UPSTREAM#v}"
+          if [ "$UPSTREAM_CLEAN" != "$LOCAL" ]; then
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+            echo "New version available: $UPSTREAM_CLEAN (current: $LOCAL)"
+          else
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+            echo "Already up to date: $LOCAL"
+          fi
+
+      - name: Sync upstream changes
+        if: steps.check.outputs.needs_update == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/sub-store-org/Sub-Store-Front-End.git
+          git fetch upstream
+          git merge upstream/master --no-edit --allow-unrelated-histories || true
+          git push origin master
+
+      - name: Set up Node.js
+        if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 7
+
+      - name: Install dependencies
+        if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build
+        if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=sub-store-front-end-cf
