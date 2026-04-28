@@ -460,11 +460,11 @@ defineExpose({ show, hide, close });
       padding-left: 60px;
       flex-shrink: 0;
       .action-btn {
-        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: flex-end;
         padding-bottom: 10px;
+        cursor: pointer;
         span {
           font-size: 14px;
           color: var(--comment-text-color);
