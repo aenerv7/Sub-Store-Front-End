@@ -771,6 +771,18 @@ export default {
       beforeIndicator: "before",
       afterIndicator: "after",
     },
+    nodeNames: {
+      entry: "All names",
+      title: "{side} all node names",
+      descriptionBefore:
+        "Copy all node names, or copy a prompt for AI to generate a general JavaScript script, then paste it into a script action for custom node renaming. For real-time AI processing, see: ",
+      aiLink: "Use AI to process nodes",
+      copyAll: "Copy all names",
+      copyPrompt: "Copy prompt",
+      copyAllSucceed: "Node names copied",
+      copyPromptSucceed: "Prompt copied",
+      copyFailed: "Failed to copy\n{e}",
+    },
     divider: "Following is filtered nodes",
     filter: {
       title: "filtered nodes",
@@ -1242,6 +1254,8 @@ export default {
       empty: "Input cannot be empty",
       invalid: "Invalid backend address",
       connection: "Connection failed, please check if the input is correct",
+      urlApiConnection: "The API address specified by the URL parameter failed to connect. Please check whether the address is correct",
+      urlMagicPathConnection: "The magicpath specified by the URL parameter failed to connect. Please check whether the path is correct",
       unknown: "An unknown error occurred",
       portRequired: "Host format must include port number"
     }
