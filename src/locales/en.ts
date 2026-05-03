@@ -1129,6 +1129,11 @@ export default {
       desc: "This list is saved locally in the browser. If you change your browser/device, you will need to add it again. Click to switch to the corresponding backend.",
       defaultName: "Default",
       currentTag: "Current",
+      copy: "Copy link",
+      editName: "Edit name",
+      saveName: "Save name",
+      cancelEditName: "Cancel edit",
+      delete: "Delete",
     },
     switchApi: {
       loading: 'Switching...',
@@ -1141,6 +1146,7 @@ export default {
       },
       errors: {
         nameEmpty: "Name cannot be empty",
+        nameDuplicate: "API name already exists",
       },
       btn: "Add",
       duplicate: {
@@ -1190,7 +1196,18 @@ export default {
     isDefaultIcon: "Restore default icon",
     isShowIcon: 'Show icon',
     isSubItemMenuFold: "Fold sub item menu",
-    isEditorCommon: "Show editor common settings",
+    isEditorCommon: "Editor common settings",
+    editorCommon: {
+      title: "Editor common settings",
+    },
+    manualSubscriptions: {
+      title: "Manually selected subscriptions",
+    },
+    editorDisplayMode: {
+      expanded: "Expanded",
+      collapsed: "Collapsed",
+      hidden: "Hidden",
+    },
     isSimpleReicon: "Show items refresh button",
     isSimpleShowRemarks: "Simple Mode Show items remarks",
     showFloatingRefreshButton: "Show floating refresh button",
