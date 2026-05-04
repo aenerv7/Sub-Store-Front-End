@@ -386,6 +386,14 @@ export default {
           label: "Subscription-Userinfo",
           placeholder: "Value/URL(supports noCache/headersCacheTtl etc.)",
         },
+        firstSubFlow: {
+          label: 'Pass Through Single Subscription Traffic Info',
+          tips: {
+            title: 'Pass Through Single Subscription Traffic Info',
+            content: 'By default, the first single subscription traffic info is passed through.\n\nTo merge traffic info from all single subscriptions in the collection, use the script at https://t.me/zhetengsha/3070',
+            okText: 'View',
+          },
+        },
         passThroughUA: {
           label: 'Pass Through Request User-Agent',
           warning: 'Pass Through Request User-Agent and Custom UA cannot be enabled at the same time',

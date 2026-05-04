@@ -404,6 +404,14 @@ export default {
           label: '订阅流量信息',
           placeholder: '值/链接(支持 noCache/headersCacheTtl 等参数)',
         },
+        firstSubFlow: {
+          label: '透传单条订阅流量信息',
+          tips: {
+            title: '透传单条订阅流量信息',
+            content: '默认透传第一个单条订阅流量信息。\n\n若需要合并组合订阅中所有单条订阅的流量，可使用脚本 https://t.me/zhetengsha/3070',
+            okText: '查看',
+          },
+        },
         passThroughUA: {
           label: '透传请求的 User-Agent',
           warning: '透传请求的 User-Agent 和 自定义 UA 不可同时启用',

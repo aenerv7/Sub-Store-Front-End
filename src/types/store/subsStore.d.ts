@@ -53,6 +53,9 @@ interface Collection {
   process: Process[];
   subscriptions: string[];
   subscriptionTags?: string[];
+  firstSubFlow?: boolean;
+  subUserinfo?: string;
+  proxy?: string;
   icon?: string;
   isIconColor?: boolean;
   tag?: string[];

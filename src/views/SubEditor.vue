@@ -412,6 +412,20 @@
               />
             </nut-form-item>
             <nut-form-item
+              prop="firstSubFlow"
+              class="ignore-failed-wrapper"
+            >
+              <template #label>
+                <span class="label-with-tip" @click="firstSubFlowTips">
+                  <span>{{ $t(`editorPage.subConfig.basic.firstSubFlow.label`) }}</span>
+                  <nut-icon name="tips"></nut-icon>
+                </span>
+              </template>
+              <div class="switch-wrapper">
+                <nut-switch v-model="form.firstSubFlow" />
+              </div>
+            </nut-form-item>
+            <nut-form-item
               :label="$t(`editorPage.subConfig.basic.proxy.label`)"
               prop="proxy"
             >
@@ -819,6 +833,7 @@ watchEffect(() => {
     switch (editType) {
       case "collections":
         form.subscriptions = [];
+        form.firstSubFlow = true;
         break;
       case "subs":
         form.source = "remote";
@@ -870,6 +885,7 @@ watchEffect(() => {
       form.subscriptions = Array.isArray(sourceData.subscriptions)
         ? [...sourceData.subscriptions]
         : [];
+      form.firstSubFlow = sourceData.firstSubFlow !== false;
       console.log('form.subscriptions ==>', form.subscriptions);
       break;
     case "subs":
@@ -1007,6 +1023,11 @@ const fetchCompareData = async () => {
     data.process = actionsToProcess(data.process, actionsList, ignoreList);
     if (data.ignoreFailedRemoteSub === "disabled") {
       data.ignoreFailedRemoteSub = false;
+    }
+    if (editType === "collections") {
+      data.firstSubFlow = data.firstSubFlow !== false;
+    } else {
+      delete data.firstSubFlow;
     }
     data.tag = [
       ...new Set(
@@ -1160,6 +1181,11 @@ const submit = () => {
     if (data.ignoreFailedRemoteSub === "disabled"){
       data.ignoreFailedRemoteSub = false;
     }
+    if (editType === "collections") {
+      data.firstSubFlow = data.firstSubFlow !== false;
+    } else {
+      delete data.firstSubFlow;
+    }
 
     console.log('submit.....\n', data);
 
@@ -1281,6 +1307,21 @@ const urlValidator = (val: string): Promise<boolean> => {
         noCancelBtn: true,
         closeOnPopstate: true,
         lockScroll: false,
+      });
+  };
+  const firstSubFlowTips = () => {
+    Dialog({
+        title: t(`editorPage.subConfig.basic.firstSubFlow.tips.title`),
+        content: t(`editorPage.subConfig.basic.firstSubFlow.tips.content`),
+        popClass: 'auto-dialog',
+        textAlign: 'left',
+        okText: t(`editorPage.subConfig.basic.firstSubFlow.tips.okText`),
+        noCancelBtn: true,
+        closeOnPopstate: true,
+        lockScroll: false,
+        onOk: () => {
+          window.open("https://t.me/zhetengsha/3070");
+        },
       });
   };
   const proxyTips = () => {
@@ -1691,6 +1732,16 @@ const handleEditGlobalClick = () => {
         font-size: 12px;
         // color: #fa2c19;
       }
+    }
+  }
+  .label-with-tip {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+
+    :deep(.nut-icon) {
+      color: inherit;
     }
   }
   :deep(.nut-form-item__label) {
