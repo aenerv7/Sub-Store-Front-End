@@ -97,7 +97,7 @@
   // });
 
 //   // 默认内容
-//   const initCode = `function operator(proxies, targetPlatform) {
+//   const initCode = `async function operator(proxies, targetPlatform) {
 //   return proxies.map( proxy => {
 //     // Change proxy information here
 
@@ -105,7 +105,7 @@
 //   });
 // }
 
-// function filter(proxies, targetPlatform) {
+// async function filter(proxies, targetPlatform) {
 //   return proxies.map( proxy => {
 //     // Return true if the current proxy is selected
 
