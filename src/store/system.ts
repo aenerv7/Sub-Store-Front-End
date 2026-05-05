@@ -46,6 +46,12 @@ export const useSystemStore = defineStore('systemStore', {
     navBartop: (state) => {
       return shouldUsePwaTopInset(state) ? (state.isSmall ? "38px" : "55px") : "0px";
     },
+    navActionOffset: (state) => {
+      const navBarHeightNum = shouldUsePwaTopInset(state) ? (state.isSmall ? 78 : 95) : 56;
+      const navBarTopNum = shouldUsePwaTopInset(state) ? (state.isSmall ? 38 : 55) : 0;
+
+      return `${(navBarHeightNum + navBarTopNum) / 2}px`;
+    },
     navBartopRight: (state) => {
       return shouldUsePwaTopInset(state) ? (state.isSmall ? "52px" : "65px") : "15px";
     },

@@ -230,14 +230,8 @@ onMounted(() => {
 });
 
 // 使用systemStore中的计算属性
-const { navBarHeight, navBartop, pwaTopPadding: Pwa_top } = storeToRefs(systemStore);
+const { navBarHeight, navBartop, navActionOffset, pwaTopPadding: Pwa_top } = storeToRefs(systemStore);
 const searchInputRef = ref<HTMLInputElement | null>(null);
-
-const navActionOffset = computed(() => {
-  const navBarHeightNum = Number.parseFloat(navBarHeight.value || "56");
-  const navBarTopNum = Number.parseFloat(navBartop.value || "0");
-  return `${(navBarHeightNum + navBarTopNum) / 2}px`;
-});
 
 const isNeedBack = computed(() => {
   return route.meta.needNavBack ?? false;
