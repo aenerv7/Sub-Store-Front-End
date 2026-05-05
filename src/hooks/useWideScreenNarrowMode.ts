@@ -1,19 +1,20 @@
 import { storeToRefs } from "pinia";
+import { useMediaQuery } from "@vueuse/core";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useSettingsStore } from "@/store/settings";
-import { SIDEBAR_BREAKPOINT, useSystemStore } from "@/store/system";
+import { SIDEBAR_BREAKPOINT } from "@/store/system";
 
 export const WIDE_SCREEN_NARROW_MODE_BREAKPOINT = SIDEBAR_BREAKPOINT;
+export const WIDE_SCREEN_NARROW_MODE_QUERY = `(min-width: ${WIDE_SCREEN_NARROW_MODE_BREAKPOINT}px)`;
 
 export const useWideScreenNarrowMode = () => {
   const route = useRoute();
   const settingsStore = useSettingsStore();
-  const systemStore = useSystemStore();
 
   const { appearanceSetting } = storeToRefs(settingsStore);
-  const { screenWidth } = storeToRefs(systemStore);
+  const isWideScreen = useMediaQuery(WIDE_SCREEN_NARROW_MODE_QUERY);
 
   const supportsWideScreenNarrowMode = computed(
     () => Boolean(route.meta?.needTabBar || route.meta?.hideSideBarInWideScreenNarrowMode)
@@ -21,7 +22,6 @@ export const useWideScreenNarrowMode = () => {
   const shouldHideSideBarInWideScreenNarrowMode = computed(() => {
     return Boolean(route.meta?.needTabBar || route.meta?.hideSideBarInWideScreenNarrowMode);
   });
-  const isWideScreen = computed(() => screenWidth.value >= WIDE_SCREEN_NARROW_MODE_BREAKPOINT);
   const storedWideScreenNarrowMode = computed(() => {
     return appearanceSetting.value.useNarrowModeOnWideScreen ?? false;
   });
