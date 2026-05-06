@@ -296,7 +296,12 @@ export default {
         },
         subInfoUrl: {
           label: "Sub Info URL",
-          placeholder: "The URL for fetching subscription usage info",
+          placeholder: "URL for fetching subscription usage info(supports headers etc.)",
+          tips: {
+            title: "Sub Info URL",
+            content:
+              'Fill in the URL used to fetch subscription usage info. The response body, or response headers subscription-userinfo/profile-web-page-url/plan-name, will be used as the file usage info.\n\nSupported parameters:\nheaders: custom request headers(single-line JSON string)\ninsecure: do not verify the server certificate\nnoCache: do not use cache\nheadersCacheTtl: headers cache ttl(seconds)\n\nExample: http://a.com/userinfo#headers=%7B%22Authorization%22%3A%22Bearer%20token%22%7D',
+          },
         },
         subInfoUserAgent: {
           label: "Sub Info User-Agent",
@@ -332,7 +337,7 @@ export default {
             label: "Usage",
             title: "Subscription URL(s)",
             content:
-              "Supports mixing three types of formats with line breaks:\n1. Full remote URL\n2. Internal file reference like /api/file/name 3.\nAbsolute path for local file\n\nSupported parameters:\n\nheaders: Custom request headers(single-line JSON string)\ninsecure: https requests will not verify the server certificate\ncacheKey: Setting the name of the optimistic cache. Its value can be managed in the persistent store(suitable for subscriptions that often fail to fetch).\n\nvalidCheck: error will be reported when expired or there is no remaining traffic\n\nflowUserAgent: the User-Agent for fetching subscription usage info\n\nflowUrl: the URL for fetching subscription usage info(using the content of the response body or response headers)\n\nshowRemaining: show remaining traffic instead of usage\n\nnoFlow: do not query for flow\n\nhideExpire: hide expiration time\n\nnoCache: do not use cache\n\ncacheTtl: cache ttl (seconds)\n\nheadersCacheTtl: headers cache ttl (seconds)\n\nresetDay: the day when monthly data usage resets\n\nstartDate: subscription start date\n\ncycleDays: reset cycle (in days).\n\nFor example: http://a.com?token=1#cycleDays=31&startDate=2024-06-04 \nor http://a.com?token=1#resetDay=15",
+              "Supports mixing three types of formats with line breaks:\n1. Full remote URL\n2. Internal file reference like /api/file/name 3.\nAbsolute path for local file\n\nSupported parameters:\n\nheaders: Custom request headers(single-line JSON string)\ninsecure: https requests will not verify the server certificate\ncacheKey: Setting the name of the optimistic cache. Its value can be managed in the persistent store(suitable for subscriptions that often fail to fetch).\n\nvalidCheck: error will be reported when expired or there is no remaining traffic\n\nflowUserAgent: the User-Agent for fetching subscription usage info\n\nflowHeaders: custom request headers for fetching subscription usage info(single-line JSON string)\n\nflowUrl: the URL for fetching subscription usage info(using the content of the response body or response headers)\n\nshowRemaining: show remaining traffic instead of usage\n\nnoFlow: do not query for flow\n\nhideExpire: hide expiration time\n\nnoCache: do not use cache\n\ncacheTtl: cache ttl (seconds)\n\nheadersCacheTtl: headers cache ttl (seconds)\n\nresetDay: the day when monthly data usage resets\n\nstartDate: subscription start date\n\ncycleDays: reset cycle (in days).\n\nFor example: http://a.com?token=1#cycleDays=31&startDate=2024-06-04 \nor http://a.com?token=1#resetDay=15",
           },
           isEmpty: "URL cannot be empty",
           isIllegal: "Invalid URL",
@@ -384,7 +389,7 @@ export default {
         },
         subUserinfo: {
           label: "Subscription-Userinfo",
-          placeholder: "Value/URL(supports noCache/headersCacheTtl etc.)",
+          placeholder: "Value/URL(URL supports headers/noCache/headersCacheTtl etc.)",
         },
         firstSubFlow: {
           label: 'Pass Through Single Subscription Traffic Info',
