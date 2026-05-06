@@ -12,6 +12,7 @@ permissions:
 jobs:
   sync-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,6 +57,8 @@ jobs:
           # 备份我们自己的 workflow 和配置
           cp -r .github/workflows /tmp/our-workflows
           cp wrangler.toml /tmp/wrangler.toml
+          [ -d .kiro ] && cp -r .kiro /tmp/our-kiro
+          [ -d docs ] && cp -r docs /tmp/our-docs
 
           # 用上游代码完全覆盖项目（保留 .git）
           git remote add upstream https://github.com/sub-store-org/Sub-Store-Front-End.git
@@ -67,6 +70,8 @@ jobs:
           mkdir -p .github/workflows
           cp -r /tmp/our-workflows/* .github/workflows/
           cp /tmp/wrangler.toml wrangler.toml
+          [ -d /tmp/our-kiro ] && cp -r /tmp/our-kiro .kiro
+          [ -d /tmp/our-docs ] && cp -r /tmp/our-docs docs
 
           # 注入 packageManager 字段（上游没有，CI 需要锁定版本）
           node -e "
@@ -88,7 +93,7 @@ jobs:
         if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install pnpm
         if: steps.check.outputs.needs_update == 'true' || github.event_name == 'workflow_dispatch'

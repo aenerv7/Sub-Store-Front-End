@@ -27,6 +27,8 @@
 
 - `.github/workflows/sync-and-deploy.yml` — CI/CD workflow
 - `wrangler.toml` — Cloudflare Pages 配置
+- `.kiro/` — Kiro steering 和配置
+- `docs/` — 项目文档
 
 同步时使用 `git checkout upstream/master -- .` 覆盖全部代码，再还原自有文件，避免 merge 冲突。
 
