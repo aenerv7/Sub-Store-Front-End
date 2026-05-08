@@ -650,12 +650,13 @@ export default {
   myPage: {
     placeholder: {
       name: '未设置 GitHub 同步',
-      des: '同步功能配置 GitHub 用户名以及 Token 后可用',
+      des: '配置 GitHub Token 启用同步',
       uploadTime: '上次上传',
       haveNotDownload: '暂无下载记录',
       githubUser: '请输入 GitHub 用户名',
       gistToken: '请输入 GitHub 令牌',
       githubProxy: '请输入 GitHub 加速代理',
+      githubApiUrl: 'GitHub API 地址(默认: https://api.github.com)',
       githubProxyRegex: '请输入 GitHub 加速代理匹配正则',
       defaultUserAgent: '请输入默认 User-Agent',
       defaultFlowUserAgent: '请输入默认查询订阅流量信息 的 User-Agent',

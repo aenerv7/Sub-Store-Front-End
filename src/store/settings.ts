@@ -76,6 +76,7 @@ export const useSettingsStore = defineStore("settingsStore", {
       syncPlatform: "",
       gistToken: "",
       githubProxy: "",
+      githubApiUrl: "",
       githubProxyRegex: "",
       githubUser: "",
       defaultUserAgent: "",
@@ -177,6 +178,7 @@ export const useSettingsStore = defineStore("settingsStore", {
         this.syncPlatform = res.data.data.syncPlatform || "";
         this.gistToken = res.data.data.gistToken || "";
         this.githubProxy = res.data.data.githubProxy || "";
+        this.githubApiUrl = normalizeSettingInputValue(res.data.data.githubApiUrl);
         this.githubProxyRegex = res.data.data.githubProxyRegex || "";
         this.githubUser = res.data.data.githubUser || "";
         this.defaultProxy = res.data.data.defaultProxy || "";
@@ -214,6 +216,7 @@ export const useSettingsStore = defineStore("settingsStore", {
         this.syncPlatform = res.data.data.syncPlatform || "";
         this.gistToken = res.data.data.gistToken || "";
         this.githubProxy = res.data.data.githubProxy || "";
+        this.githubApiUrl = normalizeSettingInputValue(res.data.data.githubApiUrl);
         this.githubProxyRegex = res.data.data.githubProxyRegex || "";
         this.githubUser = res.data.data.githubUser || "";
         this.defaultProxy = res.data.data.defaultProxy || "";
