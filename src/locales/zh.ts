@@ -847,6 +847,8 @@ export default {
       desc: '是否确认删除同步配置 {displayName}？删除后不可恢复！\n\n⚠️ 若当前同步配置进行过同步, 将尝试原文件名和编码后的文件名对应的文件',
       archiveExtra: '⚠️ 若当前同步配置进行过同步, 仍会继续尝试删除原文件名和编码后的文件名对应的文件',
       succeedNotify: '删除同步配置成功！',
+      remotePlaceholderNotice: '远端配置文件已删除，并保留占位文件防止 Gist 被删空',
+      remoteDeleteFailedNotice: '同步配置已删除，但远端配置文件删除失败，详情请查看日志',
       btn: {
         confirm: '确认删除',
         cancel: '取消',
@@ -1043,9 +1045,9 @@ export default {
     },
     liveDelete: {
       title: '删除',
-      desc: '新版后端支持归档\n是否继续处理 {displayName}？',
+      desc: '是否继续处理 {displayName}？',
       batchDesc:
-        '新版后端支持归档\n是否继续处理选中的 {count} 项{type}？',
+        '是否继续处理选中的 {count} 项{type}？',
       succeedNotify: '已归档',
       btn: {
         archive: '归档',

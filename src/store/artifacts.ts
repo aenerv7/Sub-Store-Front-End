@@ -57,12 +57,26 @@ export const useArtifactsStore = defineStore('artifactsStore', {
       const { data } = await artifactsApi.deleteArtifact(name, mode);
       if (data.status === 'success') {
         await this.fetchArtifactsData();
+        const remote = data.data?.remote;
+        const remoteNotice =
+          remote?.status === 'placeholder_retained'
+            ? t('syncPage.deleteArt.remotePlaceholderNotice')
+            : remote?.status === 'failed'
+              ? t('syncPage.deleteArt.remoteDeleteFailedNotice')
+              : '';
         isShowNotify && showNotify({
           title:
             mode === 'archive'
               ? t('archivePage.liveDelete.succeedNotify')
               : t('syncPage.deleteArt.succeedNotify'),
-          type: mode === 'archive' ? 'success' : 'danger',
+          content: remoteNotice,
+          type:
+            remote?.status === 'failed'
+              ? 'warning'
+              : mode === 'archive'
+                ? 'success'
+                : 'danger',
+          duration: remoteNotice ? 5000 : undefined,
         });
         return true;
       }

@@ -854,6 +854,8 @@ export default {
       desc: "Are you sure to delete sync configuration {displayName}? \nDeleted cannot be restored!\n\n⚠️ If the current item has been synced before, an attempt will be made to delete gist files with the original filename and the encoded filename.",
       archiveExtra: "⚠️ If this sync configuration has been synced before, the original filename and encoded filename will still be removed from gist when possible.",
       succeedNotify: "Successfully deleted!",
+      remotePlaceholderNotice: "The remote configuration file was deleted, and a placeholder file was kept to prevent the Gist from becoming empty.",
+      remoteDeleteFailedNotice: "The sync configuration was deleted, but deleting the remote configuration file failed. Check logs for details.",
       btn: {
         confirm: "Delete",
         cancel: "Cancel",
@@ -1056,9 +1058,9 @@ export default {
     },
     liveDelete: {
       title: "Delete",
-      desc: 'New backend supports archiving.\nContinue with {displayName}?',
+      desc: "Continue with {displayName}?",
       batchDesc:
-        'New backend supports archiving.\nContinue with the selected {count} {type} item(s)?',
+        "Continue with the selected {count} {type} item(s)?",
       succeedNotify: "Archived",
       btn: {
         archive: "Archive",
