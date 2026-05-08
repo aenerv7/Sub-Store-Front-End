@@ -335,23 +335,22 @@ const sourceUrl = computed(() => {
     const url = `${host.value}${path}`;
     return url;
   }
-  const urlTarget: string =
-    artifact.value.platform !== null
-      ? `?target=${artifact.value.platform}`
-      : "";
-  let urlIncludeUnsupportedProxy = artifact.value.includeUnsupportedProxy
-    ? `includeUnsupportedProxy=true`
-    : "";
-  if (urlTarget && urlIncludeUnsupportedProxy) {
-    urlIncludeUnsupportedProxy = `&${urlIncludeUnsupportedProxy}`;
-  } else if (urlIncludeUnsupportedProxy) {
-    urlIncludeUnsupportedProxy = `?${urlIncludeUnsupportedProxy}`;
+  const query = new URLSearchParams();
+  if (artifact.value.platform !== null) {
+    query.set("target", artifact.value.platform);
   }
+  if (artifact.value.includeUnsupportedProxy) {
+    query.set("includeUnsupportedProxy", "true");
+  }
+  if (artifact.value.prettyYaml) {
+    query.set("prettyYaml", "true");
+  }
+  const queryString = query.toString();
   return `${host.value}/download/${
     artifact.value.type === "subscription" ? "" : "collection/"
   }${encodeURIComponent(
     artifact.value.source
-  )}${urlTarget}${urlIncludeUnsupportedProxy}`;
+  )}${queryString ? `?${queryString}` : ""}`;
 });
 
 const openUrl = () => {

@@ -32,6 +32,7 @@ interface Artifact {
   tag?: string[];
   sync?: boolean;
   includeUnsupportedProxy?: boolean;
+  prettyYaml?: boolean;
   updated?: number;
   url?: string;
 }
@@ -45,6 +46,8 @@ interface ArtifactForm {
   platform: ArtifactsPlatform;
   tag?: string[];
   sync?: boolean;
+  includeUnsupportedProxy?: boolean;
+  prettyYaml?: boolean;
   updated?: number;
   url?: string;
 }

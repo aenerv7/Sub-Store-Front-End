@@ -892,6 +892,9 @@ export default {
           content: "https://github.com/sub-store-org/Sub-Store/wiki/%E9%93%BE%E6%8E%A5%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E",
         },
       },
+      prettyYaml: {
+        label: "More readable YAML",
+      },
       platform: {
         label: "Target Platform",
         isRequired: "Target platform is required",
