@@ -131,6 +131,26 @@ jobs:
         run: |
           # 删除上游 lock 文件（包含 npmmirror 淘宝镜像源，CI 无法访问）
           rm -f pnpm-lock.yaml
+
+          # 确保 pnpm-workspace.yaml 有 packages 字段（上游可能只有 allowBuilds）
+          node -e "
+            const fs = require('fs');
+            const wsPath = './pnpm-workspace.yaml';
+            if (fs.existsSync(wsPath)) {
+              let content = fs.readFileSync(wsPath, 'utf8');
+              if (!content.includes('packages:')) {
+                content = 'packages:\n  - \".\"\n' + content;
+                fs.writeFileSync(wsPath, content);
+              }
+            }
+            const npmrcPath = './.npmrc';
+            let npmrc = fs.existsSync(npmrcPath) ? fs.readFileSync(npmrcPath, 'utf8') : '';
+            if (!npmrc.includes('ignore-workspace-root-check')) {
+              npmrc += '\nignore-workspace-root-check=true\n';
+              fs.writeFileSync(npmrcPath, npmrc);
+            }
+          "
+
           pnpm install --no-frozen-lockfile
 
       - name: Build
