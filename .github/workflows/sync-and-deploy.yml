@@ -85,16 +85,25 @@ jobs:
 
           # 修复 pnpm-workspace.yaml：上游只有 allowBuilds 没有 packages 字段，
           # pnpm 9 会报 'packages field missing or empty'，需要补上
+          # 同时设置 ignore-workspace-root-check 避免 wrangler-action 安装 wrangler 时报错
           node -e "
             const fs = require('fs');
-            const path = './pnpm-workspace.yaml';
-            if (fs.existsSync(path)) {
-              let content = fs.readFileSync(path, 'utf8');
+            const wsPath = './pnpm-workspace.yaml';
+            if (fs.existsSync(wsPath)) {
+              let content = fs.readFileSync(wsPath, 'utf8');
               if (!content.includes('packages:')) {
                 content = 'packages:\n  - \".\"\n' + content;
-                fs.writeFileSync(path, content);
+                fs.writeFileSync(wsPath, content);
                 console.log('Patched pnpm-workspace.yaml: added packages field');
               }
+            }
+            // 确保 .npmrc 中有 ignore-workspace-root-check
+            const npmrcPath = './.npmrc';
+            let npmrc = fs.existsSync(npmrcPath) ? fs.readFileSync(npmrcPath, 'utf8') : '';
+            if (!npmrc.includes('ignore-workspace-root-check')) {
+              npmrc += '\nignore-workspace-root-check=true\n';
+              fs.writeFileSync(npmrcPath, npmrc);
+              console.log('Patched .npmrc: added ignore-workspace-root-check=true');
             }
           "
 
