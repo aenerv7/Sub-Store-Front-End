@@ -70,7 +70,10 @@ jobs:
           mkdir -p .github/workflows
           cp -r /tmp/our-workflows/* .github/workflows/
           cp /tmp/wrangler.toml wrangler.toml
+          # 先删除再还原，避免 cp -r 导致嵌套目录（our-kiro/our-kiro/...）
+          rm -rf .kiro
           [ -d /tmp/our-kiro ] && cp -r /tmp/our-kiro .kiro
+          rm -rf docs
           [ -d /tmp/our-docs ] && cp -r /tmp/our-docs docs
 
           # 注入 packageManager 字段（上游没有，CI 需要锁定版本）
@@ -78,6 +81,21 @@ jobs:
             const pkg = require('./package.json');
             pkg.packageManager = 'pnpm@9.15.9';
             require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+          # 修复 pnpm-workspace.yaml：上游只有 allowBuilds 没有 packages 字段，
+          # pnpm 9 会报 'packages field missing or empty'，需要补上
+          node -e "
+            const fs = require('fs');
+            const path = './pnpm-workspace.yaml';
+            if (fs.existsSync(path)) {
+              let content = fs.readFileSync(path, 'utf8');
+              if (!content.includes('packages:')) {
+                content = 'packages:\n  - \".\"\n' + content;
+                fs.writeFileSync(path, content);
+                console.log('Patched pnpm-workspace.yaml: added packages field');
+              }
+            }
           "
 
           # 删除上游的 Vercel 相关 workflow（如果有）
