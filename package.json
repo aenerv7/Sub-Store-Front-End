@@ -1,11 +1,12 @@
 {
   "name": "sub-store-front-end",
-  "version": "2.17.10",
+  "version": "2.17.11",
   "private": true,
   "scripts": {
     "dev": "vite --host",
     "dev:production": "vite --host --mode production",
     "build": "vue-tsc --noEmit && vite build",
+    "check:locales": "node scripts/check-locales.mjs",
     "preview": "vite preview --host",
     "changelog": "conventional-changelog -p cli -i CHANGELOG.md -s"
   },
