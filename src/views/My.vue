@@ -334,6 +334,28 @@
             right-icon="tips"
             @click-right-icon="githubApiTimeoutTips"
           />
+          <nut-input
+            class="input"
+            v-model="backendRequestConcurrencyInput"
+            :disabled="!isRequestConfigEditing"
+            :placeholder="$t(`myPage.placeholder.backendRequestConcurrency`)"
+            type="number"
+            input-align="left"
+            :left-icon="iconConcurrency"
+            right-icon="tips"
+            @click-right-icon="backendRequestConcurrencyTips"
+          />
+          <nut-input
+            class="input"
+            v-model="backendRequestConcurrencyWaitTimeInput"
+            :disabled="!isRequestConfigEditing"
+            :placeholder="$t(`myPage.placeholder.backendRequestConcurrencyWaitTime`)"
+            type="number"
+            input-align="left"
+            :left-icon="iconTimeout"
+            right-icon="tips"
+            @click-right-icon="backendRequestConcurrencyWaitTimeTips"
+          />
         </div>
       </div>
       <div class="config-card">
@@ -484,6 +506,17 @@
           />
           <nut-input
             class="input"
+            v-model="concurrencyWaitTimeInput"
+            :disabled="!isFrontEndConfigEditing"
+            :placeholder="$t(`myPage.placeholder.concurrencyWaitTime`)"
+            type="number"
+            input-align="left"
+            :left-icon="iconTimeout"
+            right-icon="tips"
+            @click-right-icon="concurrencyWaitTimeTips"
+          />
+          <nut-input
+            class="input"
             v-model="apiCheckTimeoutInput"
             :disabled="!isFrontEndConfigEditing"
             :placeholder="$t(`myPage.placeholder.apiCheckTimeout`)"
@@ -618,7 +651,7 @@ const router = useRouter();
 const { showNotify } = useAppNotifyStore();
 const { currentUrl: host } = useHostAPI();
 const settingsStore = useSettingsStore();
-const { githubUser, gistToken, syncTime, defaultUserAgent, defaultFlowUserAgent, defaultProxy, defaultTimeout, cacheThreshold, resourceCacheTtl, headersCacheTtl, scriptCacheTtl, logsMaxCount, syncPlatform, githubProxy, githubApiUrl, githubApiTimeout, artifactSyncBatchSize, githubProxyRegex, gistUpload } =
+const { githubUser, gistToken, syncTime, defaultUserAgent, defaultFlowUserAgent, defaultProxy, defaultTimeout, backendRequestConcurrency, backendRequestConcurrencyWaitTime, cacheThreshold, resourceCacheTtl, headersCacheTtl, scriptCacheTtl, logsMaxCount, syncPlatform, githubProxy, githubApiUrl, githubApiTimeout, artifactSyncBatchSize, githubProxyRegex, gistUpload } =
   storeToRefs(settingsStore);
 
 const DEFAULT_GITHUB_API_URL = "https://api.github.com";
@@ -737,12 +770,15 @@ const uaInput = ref("");
 const flowUaInput = ref("");
 const proxyInput = ref("");
 const timeoutInput = ref("");
+const backendRequestConcurrencyInput = ref("");
+const backendRequestConcurrencyWaitTimeInput = ref("");
 const cacheThresholdInput = ref("");
 const resourceCacheTtlInput = ref("");
 const headersCacheTtlInput = ref("");
 const scriptCacheTtlInput = ref("");
 const logsMaxCountInput = ref("");
 const concurrencyInput = ref("");
+const concurrencyWaitTimeInput = ref("");
 const apiCheckTimeoutInput = ref("");
 const apiRequestTimeoutInput = ref("");
 const isGitHubConfigEditing = ref(false);
@@ -771,6 +807,8 @@ const toggleEditMode = async (type) => {
         defaultFlowUserAgent: flowUaInput.value,
         defaultProxy: proxyInput.value,
         defaultTimeout: timeoutInput.value,
+        backendRequestConcurrency: backendRequestConcurrencyInput.value,
+        backendRequestConcurrencyWaitTime: backendRequestConcurrencyWaitTimeInput.value,
         cacheThreshold: cacheThresholdInput.value,
         resourceCacheTtl: resourceCacheTtlInput.value,
         headersCacheTtl: headersCacheTtlInput.value,
@@ -800,6 +838,8 @@ const toggleEditMode = async (type) => {
       flowUaInput.value = defaultFlowUserAgent.value || "";
       proxyInput.value = defaultProxy.value;
       timeoutInput.value = defaultTimeout.value;
+      backendRequestConcurrencyInput.value = backendRequestConcurrency.value || "";
+      backendRequestConcurrencyWaitTimeInput.value = backendRequestConcurrencyWaitTime.value || "";
       cacheThresholdInput.value = cacheThreshold.value;
       resourceCacheTtlInput.value = resourceCacheTtl.value;
       headersCacheTtlInput.value = headersCacheTtl.value;
@@ -846,6 +886,19 @@ const toggleEditMode = async (type) => {
         console.log(`清除并发数设置`)
         localStorage.removeItem('concurrency');
       }
+      const concurrencyWaitTime = parseInt(concurrencyWaitTimeInput.value, 10);
+      if (!isNaN(concurrencyWaitTime)) {
+        if (concurrencyWaitTime > 0) {
+          console.log(`设置并发等待时间 ${concurrencyWaitTime}`)
+          localStorage.setItem('concurrencyWaitTime', concurrencyWaitTime.toString());
+        } else {
+          console.log(`清除并发等待时间设置`)
+          localStorage.removeItem('concurrencyWaitTime');
+        }
+      } else {
+        console.log(`清除并发等待时间设置`)
+        localStorage.removeItem('concurrencyWaitTime');
+      }
       setTimeout(() => {
         window.location.reload();
       }, 100);
@@ -867,6 +920,12 @@ const toggleEditMode = async (type) => {
         concurrencyInput.value = storedConcurrency;
       } else {
         concurrencyInput.value = '';
+      }
+      const storedConcurrencyWaitTime = localStorage.getItem('concurrencyWaitTime');
+      if (storedConcurrencyWaitTime) {
+        concurrencyWaitTimeInput.value = storedConcurrencyWaitTime;
+      } else {
+        concurrencyWaitTimeInput.value = '';
       }
     }
     if (type === 'github' && !isGitHubConfigEditing.value) {
@@ -941,6 +1000,8 @@ const setDisplayInfo = () => {
   flowUaInput.value = defaultFlowUserAgent.value || "";
   proxyInput.value = defaultProxy.value || "";
   timeoutInput.value = defaultTimeout.value || "";
+  backendRequestConcurrencyInput.value = backendRequestConcurrency.value || "";
+  backendRequestConcurrencyWaitTimeInput.value = backendRequestConcurrencyWaitTime.value || "";
   cacheThresholdInput.value = cacheThreshold.value || "";
   resourceCacheTtlInput.value = resourceCacheTtl.value || "";
   headersCacheTtlInput.value = headersCacheTtl.value || "";
@@ -1235,6 +1296,30 @@ const timeoutTips = () => {
       lockScroll: false,
     });
 };
+const backendRequestConcurrencyTips = () => {
+  Dialog({
+      title: '后端请求并发数',
+      content: '后端需 >= 2.23.32\n\n控制后端发起外部请求时的并发数。默认 10；在代理 App 中建议不超过 20，过高可能增加连接数和内存压力。\n\n实际会用于远程资源下载，例如远程订阅、文件、脚本、预览、同步/定时同步等经后端下载工具发起的请求；也会用于订阅流量信息请求，例如 Subscription-Userinfo 的 HEAD/GET 请求。\n\n域名解析除外，它有自己的请求并发数。\n\n后端日志会输出 [Backend Request Concurrency]，包含 active、pending、limit、waitTime，方便调试。',
+      popClass: 'auto-dialog',
+      textAlign: 'left',
+      okText: 'OK',
+      noCancelBtn: true,
+      closeOnPopstate: true,
+      lockScroll: false,
+    });
+};
+const backendRequestConcurrencyWaitTimeTips = () => {
+  Dialog({
+      title: '后端请求并发等待时间',
+      content: '后端需 >= 2.23.32\n\n每个受后端请求并发数限制的请求拿到并发槽后，先等待指定毫秒数再发出。默认 0。\n\n可用于降低代理 App 中后端请求的瞬时连接压力；数值越大，总处理耗时也会越长。\n\n作用范围与后端请求并发数一致：远程资源下载和订阅流量信息请求。域名解析除外，它有自己的请求并发数。',
+      popClass: 'auto-dialog',
+      textAlign: 'left',
+      okText: 'OK',
+      noCancelBtn: true,
+      closeOnPopstate: true,
+      lockScroll: false,
+    });
+};
 const cacheThresholdTips = () => {
   Dialog({
       title: '可尝试设置为 1024',
@@ -1293,7 +1378,18 @@ const logsMaxCountTips = () => {
 const concurrencyTips = () => {
   Dialog({
       title: '并发数',
-      content: 'Shadowrocket 并发可能会爆内存, 可设为 1',
+      content: 'Shadowrocket/Surge 等代理 App 中并发数太高可能会爆内存, 可自行调整',
+      popClass: 'auto-dialog',
+      okText: 'OK',
+      noCancelBtn: true,
+      closeOnPopstate: true,
+      lockScroll: false,
+    });
+};
+const concurrencyWaitTimeTips = () => {
+  Dialog({
+      title: '并发等待时间',
+      content: '每个受并发限制的前端请求拿到并发槽后，等待指定毫秒数再发出。默认 0 毫秒。',
       popClass: 'auto-dialog',
       okText: 'OK',
       noCancelBtn: true,

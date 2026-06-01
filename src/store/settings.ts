@@ -2,6 +2,7 @@ import { useSettingsApi } from "@/api/settings";
 import i18n from "@/locales";
 import { useGlobalStore } from '@/store/global';
 import { useAppNotifyStore } from "@/store/appNotify";
+import { runFrontendRequestTask } from "@/utils/requestConcurrency";
 import { Toast } from "@nutui/nutui";
 import { defineStore } from "pinia";
 // import { useEnvApi } from '@/api/env';
@@ -105,6 +106,8 @@ export const useSettingsStore = defineStore("settingsStore", {
       defaultFlowUserAgent: "",
       defaultProxy: "",
       defaultTimeout: "",
+      backendRequestConcurrency: "",
+      backendRequestConcurrencyWaitTime: "",
       cacheThreshold: "",
       resourceCacheTtl: "",
       headersCacheTtl: "",
@@ -197,7 +200,7 @@ export const useSettingsStore = defineStore("settingsStore", {
     },
     async fetchSettings() {
       const { showNotify } = useAppNotifyStore();
-      const res = await settingsApi.getSettings();
+      const res = await runFrontendRequestTask(() => settingsApi.getSettings(), "settings.getSettings");
       if (res?.data?.status === "success" && res?.data?.data) {
         this.syncPlatform = res.data.data.syncPlatform || "";
         this.gistToken = res.data.data.gistToken || "";
@@ -211,6 +214,8 @@ export const useSettingsStore = defineStore("settingsStore", {
         this.defaultUserAgent = res.data.data.defaultUserAgent || "";
         this.defaultFlowUserAgent = res.data.data.defaultFlowUserAgent || "";
         this.defaultTimeout = res.data.data.defaultTimeout || "";
+        this.backendRequestConcurrency = normalizeSettingInputValue(res.data.data.backendRequestConcurrency);
+        this.backendRequestConcurrencyWaitTime = normalizeSettingInputValue(res.data.data.backendRequestConcurrencyWaitTime);
         this.cacheThreshold = res.data.data.cacheThreshold || "";
         this.resourceCacheTtl = res.data.data.resourceCacheTtl || "";
         this.headersCacheTtl = res.data.data.headersCacheTtl || "";
@@ -254,6 +259,8 @@ export const useSettingsStore = defineStore("settingsStore", {
         this.defaultUserAgent = res.data.data.defaultUserAgent || "";
         this.defaultFlowUserAgent = res.data.data.defaultFlowUserAgent || "";
         this.defaultTimeout = res.data.data.defaultTimeout || "";
+        this.backendRequestConcurrency = normalizeSettingInputValue(res.data.data.backendRequestConcurrency);
+        this.backendRequestConcurrencyWaitTime = normalizeSettingInputValue(res.data.data.backendRequestConcurrencyWaitTime);
         this.cacheThreshold = res.data.data.cacheThreshold || "";
         this.resourceCacheTtl = res.data.data.resourceCacheTtl || "";
         this.headersCacheTtl = res.data.data.headersCacheTtl || "";
