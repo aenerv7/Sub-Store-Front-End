@@ -514,7 +514,12 @@ const settingsStore = useSettingsStore();
 const subsStore = useSubsStore();
 const { bottomSafeArea } = storeToRefs(globalStore);
 const { navBarHeight } = storeToRefs(systemStore);
-const { appearanceSetting, githubProxy, githubProxyRegex, theme } = storeToRefs(settingsStore);
+const {
+  appearanceSetting,
+  githubProxy,
+  githubProxyRegex,
+  theme,
+} = storeToRefs(settingsStore);
 const { showNotify } = useAppNotifyStore();
 const { currentUrl: host, currentShareBaseUrl } = useHostAPI();
 const { env } = useBackend();
