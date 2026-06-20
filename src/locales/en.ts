@@ -328,6 +328,7 @@ export default {
         expiration: "Expiration",
         display: "Display",
       },
+      sourceNameInputLabel: "Enter/select subscription name",
       pop: {
         helpTitle: "Help",
         helpContent:
@@ -757,9 +758,24 @@ export default {
           paramsEmpty: 'No parameters',
           duplicateKeyWarning: 'Duplicate key names',
         },
+        "Add Proxies From Subscription Operator": {
+          label: "Add Nodes From Subscription",
+          tipsTitle: "Add Nodes From Subscription Tips",
+          tipsDes:
+            "Add Mihomo nodes produced by a single subscription or collection subscription to the current Mihomo profile proxies field.",
+          des: {
+            source: "Source",
+            sourceName: "Subscription",
+            includeUnsupportedProxy: "Include unsupported protocols",
+            position: "Node add mode",
+          },
+          sourceOptions: ["Single Subscription", "Collection Subscription"],
+          sourceNamePlaceholder: "Enter/select subscription name",
+          positionOptions: ["Replace", "Insert at Front", "Append at Back"],
+        },
       },
       sourceNamePicker: {
-        title: 'Select Subscription Name',
+        title: 'Enter/select subscription name',
         cancel: 'Cancel',
         confirm: 'Confirm',
         emptyTips: 'Subscription not found? Click to add a subscription',
@@ -774,6 +790,7 @@ export default {
       haveNotDownload: "Not download yet",
       githubUser: "Please input GitHub username",
       gistToken: "Please input GitHub Token",
+      gistAgeSecretKey: "Enter Gist backup age decryption secret key",
       githubProxy: "Please input GitHub Proxy",
       githubApiUrl: "GitHub API URL (default: https://api.github.com)",
       githubApiTimeout: "GitHub API Request Timeout (in ms, default: 10000)",
@@ -1346,6 +1363,7 @@ export default {
       title: 'Gist Upload',
       base64: 'Base64 Encoded',
       plaintext: 'Plaintext(w/o GitHub Token)',
+      age: 'age Encrypted',
     },
     subProgress: {
       title: "Subscription Progress Style",
@@ -1460,6 +1478,7 @@ export default {
       type: "Type",
       generate: "Generate",
       applyPublic: "Fill in",
+      applyPair: "Fill both",
       derive: "From secret",
       copyPublic: "Copy",
       copySecret: "Copy",
@@ -1468,9 +1487,12 @@ export default {
       clearSecret: "Clear age decryption secret key",
       copied: "Copied",
       filled: "Filled in",
+      filledPair: "Secret and public keys filled in",
       error: "age key operation failed",
       tips:
         "Only native age X25519 and MLKEM768-X25519 keys are supported. The generated age decryption secret key is shown only in this dialog; save it securely. The age encryption public key can be written to the config field to encrypt final output.",
+      secretTips:
+        "Only native age X25519 and MLKEM768-X25519 keys are supported. The generated age decryption secret key is shown only in this dialog; save it securely. Gist age encryption derives the public key from this secret key on the backend.",
     },
   },
   magicPath: {

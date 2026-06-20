@@ -322,6 +322,7 @@ export default {
         expiration: '有效期',
         display: '显示',
       },
+      sourceNameInputLabel: '输入/选择订阅名称',
       pop: {
         helpTitle: '节点操作帮助',
         helpContent:
@@ -577,6 +578,20 @@ export default {
           paramsEmpty: '暂无参数数据',
           duplicateKeyWarning: '重复的键名',
         },
+        'Add Proxies From Subscription Operator': {
+          label: '从订阅添加节点',
+          tipsTitle: '从订阅添加节点提示',
+          tipsDes: '将单条订阅或组合订阅产出的 Mihomo 节点写入当前 Mihomo 配置的 proxies 字段',
+          des: {
+            source: '来源',
+            sourceName: '订阅',
+            includeUnsupportedProxy: '含不支持的协议',
+            position: '节点添加方式',
+          },
+          sourceOptions: ['单条订阅', '组合订阅'],
+          sourceNamePlaceholder: '输入/选择订阅名称',
+          positionOptions: ['覆盖', '插入到前面', '追加到后面'],
+        },
         'Flag Operator': {
           label: '旗帜操作',
           des: '工作模式',
@@ -722,7 +737,7 @@ export default {
         },
       },
       sourceNamePicker: {
-        title: '选择订阅名称',
+        title: '输入/选择订阅名称',
         cancel: '取消',
         confirm: '确定',
         emptyTips: '未找到订阅？点击去添加订阅',
@@ -737,6 +752,7 @@ export default {
       haveNotDownload: '暂无下载记录',
       githubUser: '请输入 GitHub 用户名',
       gistToken: '请输入 GitHub 令牌',
+      gistAgeSecretKey: '请输入 Gist 备份 age 解密私钥',
       githubProxy: '请输入 GitHub 加速代理',
       githubApiUrl: 'GitHub API 地址(默认: https://api.github.com)',
       githubApiTimeout: 'GitHub API 请求超时(单位: 毫秒, 默认: 10000)',
@@ -1300,6 +1316,7 @@ export default {
       title: 'Gist 上传',
       base64: 'Base64 编码',
       plaintext: '明文(不带 GitHub Token)',
+      age: 'age 加密',
     },
     subProgress: {
       title: '订阅进度样式',
@@ -1413,6 +1430,7 @@ export default {
       type: '类型',
       generate: '一键生成',
       applyPublic: '一键填入',
+      applyPair: '同时填入',
       derive: '从私钥生成',
       copyPublic: '复制',
       copySecret: '复制',
@@ -1421,8 +1439,10 @@ export default {
       clearSecret: '清空 age 解密私钥',
       copied: '已复制',
       filled: '已填入',
+      filledPair: '已填入私钥和公钥',
       error: 'age key 操作失败',
       tips: '只支持 age 原生 X25519 和 MLKEM768-X25519 key. 生成的 age 解密私钥只在此弹窗显示, 请妥善保存; age 加密公钥可写入配置字段用于加密最终输出.',
+      secretTips: '只支持 age 原生 X25519 和 MLKEM768-X25519 key. 生成的 age 解密私钥只在此弹窗显示, 请妥善保存; Gist age 加密会由后端从私钥推导公钥.',
     },
   },
   magicPath: {

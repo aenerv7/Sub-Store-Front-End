@@ -317,6 +317,7 @@ export default {
         "expiration": "Срок",
         "display": "Отображение"
       },
+      "sourceNameInputLabel": "Введите/выберите имя подписки",
       "pop": {
         "helpTitle": "Справка",
         "helpContent": "Действия над прокси-узлами (нодами) будут выполняться по порядку. Вы можете перетаскивать их для изменения приоритета.\n\nПереключатель предпросмотра управляет тем, применяется ли действие во время мгновенного превью.\n\nОбратите внимание: действия над узлами сохраняются и будут работать в любом случае, независимо от положения переключателя превью.",
@@ -804,10 +805,31 @@ export default {
           "paramsOptions": "Опции",
           "paramsEmpty": "Нет параметров",
           "duplicateKeyWarning": "Дублирование имен ключей"
+        },
+        "Add Proxies From Subscription Operator": {
+          "label": "Добавить узлы из подписки",
+          "tipsTitle": "Подсказки по добавлению узлов из подписки",
+          "tipsDes": "Добавляет Mihomo-узлы из одиночной или групповой подписки в поле proxies текущего Mihomo-профиля.",
+          "des": {
+            "source": "Источник",
+            "sourceName": "Подписка",
+            "includeUnsupportedProxy": "Включать неподдерживаемые протоколы",
+            "position": "Способ добавления узлов"
+          },
+          "sourceOptions": [
+            "Одиночная подписка",
+            "Групповая подписка"
+          ],
+          "sourceNamePlaceholder": "Введите/выберите имя подписки",
+          "positionOptions": [
+            "Заменить",
+            "Вставить в начало",
+            "Добавить в конец"
+          ]
         }
       },
       "sourceNamePicker": {
-        "title": "Выберите имя подписки",
+        "title": "Введите/выберите имя подписки",
         "cancel": "Отмена",
         "confirm": "Подтвердить",
         "emptyTips": "Подписка не найдена? Нажмите для добавления новой подписки"
@@ -822,6 +844,7 @@ export default {
       "haveNotDownload": "Еще не скачивалось",
       "githubUser": "Введите имя пользователя GitHub",
       "gistToken": "Введите GitHub Personal Access Token (Gist)",
+      "gistAgeSecretKey": "Введите age decryption secret key для резервной копии Gist",
       "githubProxy": "Введите прокси для GitHub (если нужен)",
       "githubApiUrl": "GitHub API URL (по умолчанию: https://api.github.com)",
       "githubApiTimeout": "Таймаут запросов к GitHub API (в мс, по умолчанию: 10000)",
@@ -1381,7 +1404,8 @@ export default {
     "gistUpload": {
       "title": "Тип выгрузки в Gist",
       "base64": "Кодировать в Base64",
-      "plaintext": "Открытый текст (без GitHub Token)"
+      "plaintext": "Открытый текст (без GitHub Token)",
+      "age": "Шифрование age"
     },
     "subProgress": {
       "title": "Стиль индикатора прогресса подписки",
@@ -1492,6 +1516,7 @@ export default {
       "type": "Тип",
       "generate": "Создать",
       "applyPublic": "Заполнить",
+      "applyPair": "Заполнить оба",
       "derive": "Из secret",
       "copyPublic": "Копировать",
       "copySecret": "Копировать",
@@ -1500,8 +1525,10 @@ export default {
       "clearSecret": "Очистить age decryption secret key",
       "copied": "Скопировано",
       "filled": "Заполнено",
+      "filledPair": "Secret и public key заполнены",
       "error": "Ошибка операции age key",
-      "tips": "Поддерживаются только нативные age ключи X25519 и MLKEM768-X25519. Созданный age decryption secret key показывается только в этом окне; сохраните его безопасно. Age encryption public key можно записать в поле конфигурации для шифрования финального вывода."
+      "tips": "Поддерживаются только нативные age ключи X25519 и MLKEM768-X25519. Созданный age decryption secret key показывается только в этом окне; сохраните его безопасно. Age encryption public key можно записать в поле конфигурации для шифрования финального вывода.",
+      "secretTips": "Поддерживаются только нативные age ключи X25519 и MLKEM768-X25519. Созданный age decryption secret key показывается только в этом окне; сохраните его безопасно. Для Gist age encryption бэкенд выводит public key из этого secret key."
     }
   },
   "magicPath": {
