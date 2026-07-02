@@ -18,6 +18,7 @@
           :style="{
             opacity: isIconColor ? 1 : 0.8,
             filter: isIconColor ? 'none' : 'brightness(var(--img-brightness))',
+            objectFit: itemIconFit,
           }"
         >
       </div>
@@ -119,6 +120,7 @@ import { useSettingsStore } from '@/store/settings';
 import { useSubsStore } from '@/store/subs';
 import { resolveArtifactIcon } from '@/utils/artifactIcon';
 import { createGithubProxyUrlRewriter } from '@/utils/githubProxy';
+import { resolveImageFit } from '@/utils/iconFit';
 import { isShareType, resolveShareDisplayIconState } from '@/utils/share';
 import {
   formatArchiveTime,
@@ -296,6 +298,13 @@ const isIconColor = computed(() => {
 
   return props.data?.snapshot?.isIconColor !== false;
 });
+const itemIconFit = computed(() => {
+  if (itemType.value === 'share') {
+    return resolveImageFit(shareIconState.value.iconFit, appearanceSetting.value.iconFit);
+  }
+
+  return resolveImageFit(props.data?.snapshot?.iconFit, appearanceSetting.value.iconFit);
+});
 
 const detailParts = computed(() => {
   if (itemType.value === 'artifact') {
@@ -428,7 +437,7 @@ const nonSimpleSecondLine = computed(() => {
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 10px;
   }
 }

@@ -2,6 +2,7 @@ import { useSettingsApi } from "@/api/settings";
 import i18n from "@/locales";
 import { useGlobalStore } from '@/store/global';
 import { useAppNotifyStore } from "@/store/appNotify";
+import { DEFAULT_IMAGE_FIT, normalizeImageFit } from "@/utils/iconFit";
 import { runFrontendRequestTask } from "@/utils/requestConcurrency";
 import { Toast } from "@nutui/nutui";
 import { defineStore } from "pinia";
@@ -214,6 +215,7 @@ export const useSettingsStore = defineStore("settingsStore", {
         isDefaultIcon: false,
         isIconColor: false,
         isShowIcon: true,
+        iconFit: DEFAULT_IMAGE_FIT,
         isSimpleShowRemark: false,
         isEditorCommon: true,
         editorCommonDisplayMode: "expanded",
@@ -268,6 +270,7 @@ export const useSettingsStore = defineStore("settingsStore", {
       this.appearanceSetting.isDefaultIcon = appearanceSetting?.isDefaultIcon ?? "";
       this.appearanceSetting.isIconColor = appearanceSetting?.isIconColor ?? "";
       this.appearanceSetting.isShowIcon = appearanceSetting?.isShowIcon ?? true;
+      this.appearanceSetting.iconFit = normalizeImageFit(appearanceSetting?.iconFit);
       this.appearanceSetting.isSimpleShowRemark = appearanceSetting?.isSimpleShowRemark ?? "";
       this.appearanceSetting.editorCommonDisplayMode = editorCommonDisplayMode;
       this.appearanceSetting.manualSubscriptionsDisplayMode = manualSubscriptionsDisplayMode;

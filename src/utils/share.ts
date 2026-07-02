@@ -58,11 +58,13 @@ export interface ShareExpirationFormState {
 interface ShareIconSourceLike {
   icon?: string | null;
   isIconColor?: boolean | null;
+  iconFit?: ImageFit | null;
 }
 
 export interface ShareDisplayIconState {
   icon: string;
   isIconColor: boolean;
+  iconFit?: ImageFit | null;
 }
 
 export const isShareExpirationMode = (value: unknown): value is ShareExpirationMode => {
@@ -120,6 +122,7 @@ export const resolveShareDisplayIconState = ({
     return {
       icon: shareIcon,
       isIconColor: share?.isIconColor !== false,
+      iconFit: share?.iconFit,
     };
   }
 
@@ -128,12 +131,14 @@ export const resolveShareDisplayIconState = ({
     return {
       icon: sourceIcon,
       isIconColor: source?.isIconColor !== false,
+      iconFit: share?.iconFit ?? source?.iconFit,
     };
   }
 
   return {
     icon: fallbackIcon,
     isIconColor: true,
+    iconFit: share?.iconFit,
   };
 };
 

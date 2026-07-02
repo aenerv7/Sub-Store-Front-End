@@ -1,5 +1,9 @@
 <template>
-    <div class="page-wrapper" @click="handleEditGlobalClick">
+    <div
+      class="page-wrapper"
+      :style="{ '--icon-fit': formIconFit }"
+      @click="handleEditGlobalClick"
+    >
       <div
         v-if="editorTabsEnabled"
         class="editor-section-tabs"
@@ -33,7 +37,7 @@
           <nut-image
             :class="{ 'sub-item-customer-icon': !isIconColor }"
             :src="fileIcon"
-            fit="cover"
+            :fit="formIconFit"
             show-loading
             @click="showIconPopup"
           />
@@ -144,6 +148,7 @@
               <nut-switch v-model="form.isIconColor" />
             </div>
           </nut-form-item>
+          <ImageFitPicker v-model="form.iconFit" :fallback-value="appearanceSetting.iconFit" />
           </div>
           <div v-show="!editorTabsEnabled || activeEditorTab === 'content'" class="editor-tab-content">
           <nut-form-item required :label="$t(`specificWord.type`)" prop="type">
@@ -541,6 +546,7 @@ import AddProxiesFromSubscription from "@/views/editor/components/AddProxiesFrom
 import TagPopup from "@/components/TagPopup.vue";
 import AgeKeyHelper from "@/components/AgeKeyHelper.vue";
 import EditorGroupingTips from "@/components/EditorGroupingTips.vue";
+import ImageFitPicker from "@/components/ImageFitPicker.vue";
 import IconPopup from "@/views/icon/IconPopup.vue";
 import FilePreview from "@/views/FilePreview.vue";
 import DesktopPicker from "@/components/DesktopPicker.vue";
@@ -574,6 +580,7 @@ import {
   normalizeFileType,
 } from "@/utils/fileType";
 import { formatPreviewError } from "@/utils/previewError";
+import { normalizeOptionalImageFit, resolveImageFit } from "@/utils/iconFit";
 
 const cmStore = useCodeStore();
 const { t, locale } = useI18n();
@@ -589,6 +596,7 @@ const FILE_EDITOR_PROP_TO_TAB: Partial<Record<string, FileEditorTab>> = {
   tag: "display",
   icon: "display",
   isIconColor: "display",
+  iconFit: "display",
   subInfoUrl: "content",
   subInfoUserAgent: "content",
   type: "content",
@@ -776,6 +784,7 @@ const form = reactive<any>({
   remark: "",
   icon: "",
   isIconColor: true,
+  iconFit: undefined,
   source: "local",
   sourceType: "collection",
   sourceName: "",
@@ -894,6 +903,7 @@ watchEffect(() => {
     form.remark = sourceData.remark;
     form.icon = sourceData.icon;
     form.isIconColor = sourceData.isIconColor !== false;
+    form.iconFit = normalizeOptionalImageFit(sourceData.iconFit);
     form.editorLanguage = sourceData.editorLanguage;
     form["age-public-key"] = sourceData["age-public-key"] || "";
     form.source = sourceData.source || "local";
@@ -1097,6 +1107,14 @@ const submit = () => {
     // 如果验证成功，开始保存/修改
     const data: any = JSON.parse(JSON.stringify(toRaw(form)));
     data.type = normalizeFileType(data.type);
+    const iconFit = normalizeOptionalImageFit(form.iconFit);
+    if (iconFit) {
+      data.iconFit = iconFit;
+    } else if (UNTITLED_FILE_NAMES.includes(configName)) {
+      delete data.iconFit;
+    } else {
+      data.iconFit = null;
+    }
     const agePublicKey = `${data["age-public-key"] || ""}`.trim();
     if (agePublicKey) {
       data["age-public-key"] = agePublicKey;
@@ -1223,6 +1241,7 @@ const rewriteGithubUrl = (url?: string | null) => {
 const isIconColor = computed(() => {
   return form.isIconColor;
 });
+const formIconFit = computed(() => resolveImageFit(form.iconFit, appearanceSetting.value.iconFit));
 const iconPopupVisible = ref(false);
 const showIconPopup = () => {
   iconPopupVisible.value = true;
@@ -1528,7 +1547,7 @@ const handleEditGlobalClick = () => {
           margin-right: 12px;
 
           :deep(img) {
-            object-fit: contain;
+            object-fit: var(--icon-fit, cover);
 
             &:not(.nut-icon__img) {
               filter: brightness(var(--img-brightness));

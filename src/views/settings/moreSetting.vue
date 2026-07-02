@@ -32,6 +32,23 @@
           <nut-switch class="my-switch" v-model="awIsShowIcon" size="mini" @change="setIsShowIcon" />
         </template>
       </nut-cell>
+      <nut-cell class="cell-item" :desc="iconFitName" @click="()=>{showIconFitPicker=true}" is-link>
+        <template #title>
+          <span class="label-with-tip">
+            {{ $t(`moreSettingPage.iconFit`) }}
+            <nut-icon
+              name="tips"
+              size="14"
+              role="button"
+              :aria-label="$t(`imageFit.tips.title`)"
+              @click.stop="openImageFitTips"
+            />
+          </span>
+        </template>
+      </nut-cell>
+      <DesktopPicker v-model="iconFitValue" v-model:visible="showIconFitPicker" :columns="imageFitColumns"
+        :title="$t(`moreSettingPage.iconFit`)" @confirm="iconFitConfirm">
+      </DesktopPicker>
     </nut-cell-group>
     <nut-cell-group>
 
@@ -192,6 +209,7 @@
   import { useAppNotifyStore } from "@/store/appNotify";
   import { useSettingsApi } from "@/api/settings";
   import { useBackend } from "@/hooks/useBackend";
+  import { DEFAULT_IMAGE_FIT, IMAGE_FIT_OPTIONS, normalizeImageFit, type ImageFit } from "@/utils/iconFit";
   // import { Dialog } from '@nutui/nutui';
 
   const { t } = useI18n();
@@ -237,6 +255,7 @@
   // const isEditing = ref(false);
   const isInit = ref(false);
   const subProgressStyleValue = ref(['hidden']);
+  const iconFitValue = ref<ImageFit[]>([DEFAULT_IMAGE_FIT]);
   const editorCommonDisplayModeValue = ref<EditorCommonDisplayMode[]>(['expanded']);
   const manualSubscriptionsDisplayModeValue = ref<EditorSectionFoldMode[]>(['collapsed']);
   const editorGroupingModeValue = ref<EditorGroupingMode[]>(['edit-only']);
@@ -246,6 +265,7 @@
   const showThemePicker = ref(false);
   // const isEditLoading = ref(false);
   const showSubProgressPicker = ref(false);
+  const showIconFitPicker = ref(false);
   const showCreateItemPositionPicker = ref(false);
   const showEditorCommonDisplayModePicker = ref(false);
   const showManualSubscriptionsDisplayModePicker = ref(false);
@@ -256,6 +276,15 @@
   const subProgressStyleName = computed(() => {
     return t(`moreSettingPage.subProgress.${subProgressStyleValue.value}`)
   })
+  const imageFitColumns = computed(() => {
+    return IMAGE_FIT_OPTIONS.map((value) => ({
+      text: t(`imageFit.${value}`),
+      value,
+    }));
+  });
+  const iconFitName = computed(() => {
+    return t(`imageFit.${iconFitValue.value[0] || DEFAULT_IMAGE_FIT}`);
+  });
   const subProgressStyleConfirm = ({ selectedValue }) => {
     // globalStore.setSubProgressStyle(selectedValue[0]);
     const data = {
@@ -263,6 +292,26 @@
       subProgressStyle: selectedValue[0]
     }
     changeAppearanceSetting({ appearanceSetting: data });
+  };
+  const iconFitConfirm = ({ selectedValue }) => {
+    const iconFit = normalizeImageFit(selectedValue[0]);
+    iconFitValue.value = [iconFit];
+    const data = {
+      ...appearanceSetting.value,
+      iconFit,
+    }
+    changeAppearanceSetting({ appearanceSetting: data });
+  };
+  const openImageFitTips = () => {
+    Dialog({
+      title: t("imageFit.tips.title"),
+      content: t("imageFit.tips.content"),
+      popClass: "auto-dialog image-fit-tips-dialog",
+      noCancelBtn: true,
+      okText: t("imageFit.tips.close"),
+      closeOnClickOverlay: true,
+      closeOnPopstate: true,
+    });
   };
   const createItemPositionName = computed(() => {
     return t(`moreSettingPage.createItemPosition.${createItemPositionValue.value[0]}`);
@@ -614,6 +663,7 @@
     LeftRight.value = appearanceSetting.value.isLeftRight;
     awIsDefaultIcon.value = appearanceSetting.value.isDefaultIcon;
     awIsShowIcon.value = appearanceSetting.value.isShowIcon;
+    iconFitValue.value = [normalizeImageFit(appearanceSetting.value.iconFit)];
     awIsSubItemMenuFold.value = appearanceSetting.value.isSubItemMenuFold;
     awSimpleReicon.value = appearanceSetting.value.isSimpleReicon;
     awSimpleShowRemark.value = appearanceSetting.value.isSimpleShowRemark;
@@ -672,6 +722,16 @@
       :deep(.nut-cell__value) {
         font-weight: normal;
         color: var(--lowest-text-color);
+      }
+    }
+
+    .label-with-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+
+      :deep(.nut-icon-tips) {
+        color: var(--second-text-color);
       }
     }
 

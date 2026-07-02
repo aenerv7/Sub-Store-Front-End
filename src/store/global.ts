@@ -87,6 +87,36 @@ export const useGlobalStore = defineStore('globalStore', {
           text: "shindgew/WHATSINStash",
           value:
             "https://raw.githubusercontent.com/shindgew/WHATSINStash/refs/heads/main/icon/iconset.json",
+        },
+        {
+          text: "xream/Unofficial theSVG(default)",
+          value:
+            "https://raw.githubusercontent.com/xream/unofficial-thesvg-iconset/refs/heads/release/default.json",
+        },
+        {
+          text: "xream/Unofficial theSVG(dark)",
+          value:
+            "https://raw.githubusercontent.com/xream/unofficial-thesvg-iconset/refs/heads/release/dark.json",
+        },
+        {
+          text: "xream/Unofficial theSVG(light)",
+          value:
+            "https://raw.githubusercontent.com/xream/unofficial-thesvg-iconset/refs/heads/release/light.json",
+        },
+        {
+          text: "xream/Unofficial theSVG(color)",
+          value:
+            "https://raw.githubusercontent.com/xream/unofficial-thesvg-iconset/refs/heads/release/color.json",
+        },
+        {
+          text: "xream/Unofficial theSVG(azure)",
+          value:
+            "https://raw.githubusercontent.com/xream/unofficial-thesvg-iconset/refs/heads/release/azure.json",
+        },
+        {
+          text: "xream/Unofficial theSVG(gcp)",
+          value:
+            "https://raw.githubusercontent.com/xream/unofficial-thesvg-iconset/refs/heads/release/gcp.json",
         }
       ],
       customIconCollections: localStorage.getItem("customIconCollections")

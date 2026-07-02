@@ -67,6 +67,7 @@
               <nut-form-item v-if="showCustomIconCollection">
                 <nut-input
                   v-model="form.customIconCollectionUrl"
+                  class="custom-icon-collection-url"
                   :border="false"
                   text-align="left"
                   :placeholder="$t(`iconCollectionPage.iconCollectionPlaceholder`)"
@@ -116,7 +117,7 @@
           >
             <nut-image
               :src="rewriteGithubUrl(icon.url)"
-              fit="cover"
+              :fit="globalIconFit"
               lazy-load
               show-loading
             />
@@ -158,6 +159,7 @@ import { useI18n } from "vue-i18n";
 import { useGlobalStore } from "@/store/global";
 import { useSettingsStore } from "@/store/settings";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
+import { normalizeImageFit } from "@/utils/iconFit";
 import { getApiRequestTimeout } from "@/utils/requestTimeout";
 
 const props = defineProps({
@@ -172,7 +174,7 @@ const globalStore = useGlobalStore();
 const settingsStore = useSettingsStore();
 const { customIconCollections, defaultIconCollections, defaultIconCollection } =
   storeToRefs(globalStore);
-const { githubProxy, githubProxyRegex } = storeToRefs(settingsStore);
+const { appearanceSetting, githubProxy, githubProxyRegex } = storeToRefs(settingsStore);
 
 const form = reactive({
   iconName: "",
@@ -208,6 +210,7 @@ const debouncedSearch = useDebounceFn(performSearch, 500);
 const iconData = computed(() => {
   return searchResult.value;
 });
+const globalIconFit = computed(() => normalizeImageFit(appearanceSetting.value.iconFit));
 const githubUrlRewriter = computed(() => {
   return createGithubProxyUrlRewriter(githubProxy.value, githubProxyRegex.value);
 });
@@ -439,6 +442,11 @@ defineExpose({ show, hide, close });
         background: transparent;
         padding: 0;
         color: var(--second-text-color);
+      }
+      .custom-icon-collection-url {
+        :deep(.nut-input-right-icon) {
+          cursor: pointer;
+        }
       }
     }
   }

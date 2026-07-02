@@ -26,6 +26,7 @@ interface Artifact {
   remark?: string;
   icon?: string;
   isIconColor?: boolean;
+  iconFit?: ImageFit | null;
   type: ArtifactType;
   source: string;
   platform: ArtifactsPlatform;
@@ -44,6 +45,8 @@ interface ArtifactForm {
   name: string;
   displayName?: string;
   remark?: string;
+  icon?: string;
+  iconFit?: ImageFit | null;
   type: ArtifactType;
   source: [string, string];
   platform: ArtifactsPlatform;

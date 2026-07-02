@@ -2,7 +2,7 @@
   <div
     class="sub-item-wrapper"
     :class="{ disabled: props.disabled, 'is-dual-column': props.isDualColumn }"
-    :style="{ padding: itemPadding }"
+    :style="{ padding: itemPadding, '--icon-fit': shareIconFit }"
     data-testid="link-card"
     @click="onClickPreviews"
   >
@@ -130,6 +130,7 @@ import { useSettingsStore } from "@/store/settings";
 import { useSubsStore } from "@/store/subs";
 import { openManagedDeleteDialog } from "@/utils/archive";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
+import { resolveImageFit } from "@/utils/iconFit";
 import {
   formatShareTimestamp,
   getShareEditPath,
@@ -274,6 +275,9 @@ const shareIcon = computed(() => {
 
 const isIconColor = computed(() => {
   return shareIconState.value.isIconColor;
+});
+const shareIconFit = computed(() => {
+  return resolveImageFit(shareIconState.value.iconFit, appearanceSetting.value.iconFit);
 });
 
 const onDeleteConfirm = async (mode: DeleteMode = "permanent") => {
@@ -454,7 +458,7 @@ const onClickPreviews = () => {
     border-radius: 12px;
 
     img {
-      object-fit: contain;
+      object-fit: var(--icon-fit, cover);
       border-radius: 10px;
     }
   }

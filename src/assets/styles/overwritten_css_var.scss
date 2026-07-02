@@ -218,6 +218,16 @@ img.auto-reverse {
     }
   }
 }
+
+.image-fit-tips-dialog {
+  > .nut-dialog {
+    > .nut-dialog__content {
+      color: var(--primary-text-color);
+      line-height: 1.5;
+      text-align: left !important;
+    }
+  }
+}
 // nut-popup round popup-bottom nut-cascader__popup
 // form
 .nut-cascader__popup,

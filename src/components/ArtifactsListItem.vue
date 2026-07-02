@@ -10,7 +10,7 @@
     <div
       class="sub-item-wrapper"
       :class="{ 'is-dual-column': props.isDualColumn }"
-      :style="{ padding: itemPadding }"
+      :style="{ padding: itemPadding, '--icon-fit': iconFit }"
       @click="handleContentClick"
     >
       <div v-if="appearanceSetting.isShowIcon" class="sub-img-wrappers" @click.stop="openUrl">
@@ -212,6 +212,7 @@ import { useSubsStore } from "@/store/subs";
 import { butifyDate } from "@/utils/butifyDate";
 import { resolveArtifactIcon } from "@/utils/artifactIcon";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
+import { resolveImageFit } from "@/utils/iconFit";
 import { isMobile } from "@/utils/isMobile";
 import { Dialog, Toast } from "@nutui/nutui";
 import { useClipboard } from "@vueuse/core";
@@ -312,6 +313,9 @@ const sourceSub = computed(() => {
 });
 const isIconColor = computed(() => {
   return artifact.value.isIconColor !== false;
+});
+const iconFit = computed(() => {
+  return resolveImageFit(artifact.value?.iconFit, appearanceSetting.value.iconFit);
 });
 
 const icon = computed(() => {
@@ -652,7 +656,7 @@ watch(isSyncOpen, async () => {
     border-radius: 12px;
 
     img {
-      object-fit: contain;
+      object-fit: var(--icon-fit, cover);
       border-radius: 10px;
     }
   }

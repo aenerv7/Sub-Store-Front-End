@@ -33,7 +33,7 @@
         <nut-image
           :class="{ 'sub-item-customer-icon': !form.isIconColor }"
           :src="subIcon"
-          fit="cover"
+          :fit="formIconFit"
           show-loading
           @click="showIconPopup"
         />
@@ -145,6 +145,7 @@
             <nut-switch v-model="form.isIconColor" />
           </div>
         </nut-form-item>
+        <ImageFitPicker v-model="form.iconFit" :fallback-value="appearanceSetting.iconFit" />
         </div>
         <div v-show="!editorTabsEnabled || activeEditorTab === 'content'" class="editor-tab-content">
         <template v-if="editType === 'subs'">
@@ -398,6 +399,7 @@
                         v-if="element[2]"
                         :size="chooserAvatarSize"
                         :url="rewriteGithubUrl(element[2])"
+                        :style="{ '--icon-fit': element[5] }"
                         bg-color=""
                       ></nut-avatar>
                       <span class="sub-item">
@@ -610,6 +612,7 @@ import HandleDuplicate from "@/views/editor/components/HandleDuplicate.vue";
 import Regex from "@/views/editor/components/Regex.vue";
 import Script from "@/views/editor/components/Script.vue";
 import IconPopup from "@/views/icon/IconPopup.vue";
+import ImageFitPicker from "@/components/ImageFitPicker.vue";
 import TagPopup from "@/components/TagPopup.vue";
 import AgeKeyHelper from "@/components/AgeKeyHelper.vue";
 import DesktopPicker from "@/components/DesktopPicker.vue";
@@ -631,6 +634,7 @@ import { useRoute, useRouter } from "vue-router";
 import cmView from "@/views/editCode/cmView.vue";
 import { useCodeStore } from "@/store/codeStore";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
+import { normalizeOptionalImageFit, resolveImageFit } from "@/utils/iconFit";
 const cmStore = useCodeStore();
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -685,6 +689,7 @@ const SUB_EDITOR_PROP_TO_TAB: Partial<Record<string, SubEditorTab>> = {
   tag: "display",
   icon: "display",
   isIconColor: "display",
+  iconFit: "display",
   source: "content",
   url: "content",
   content: "content",
@@ -780,7 +785,7 @@ const chooserAvatarSize = computed(() => {
   return appearanceSetting.value.isSimpleMode ? "28" : "32";
 });
 
-type SubSelectRow = [string, string, string | undefined, string[] | undefined, boolean];
+type SubSelectRow = [string, string, string | undefined, string[] | undefined, boolean, ImageFit];
 
   const sub = computed(() => subsStore.getOneSub(configName));
   const collection = computed(() => subsStore.getOneCollection(configName));
@@ -793,7 +798,8 @@ type SubSelectRow = [string, string, string | undefined, string[] | undefined, b
         item.displayName || item['display-name'] || item.name,
         item.icon || (appearanceSetting.value.isDefaultIcon ? logoIcon : logoRedIcon),
         item.tag,
-        item.isIconColor !== false
+        item.isIconColor !== false,
+        resolveImageFit(item.iconFit, appearanceSetting.value.iconFit),
       ];
     });
   });
@@ -940,6 +946,7 @@ const form = reactive<any>({
   passThroughUA: false,
   icon: "",
   isIconColor: true,
+  iconFit: undefined,
   process: [
     {
       type: "Quick Setting Operator",
@@ -1002,6 +1009,7 @@ watchEffect(() => {
   form.remark = sourceData.remark;
   form.icon = sourceData.icon;
   form.isIconColor = sourceData.isIconColor !== false;
+  form.iconFit = normalizeOptionalImageFit(sourceData.iconFit);
   form.editorLanguage = sourceData.editorLanguage;
   form.process = newProcess;
   form.subUserinfo = sourceData.subUserinfo;
@@ -1271,6 +1279,14 @@ const submit = () => {
     });
     // 如果验证成功，开始保存/修改
     const data: any = JSON.parse(JSON.stringify(toRaw(form)));
+    const iconFit = normalizeOptionalImageFit(form.iconFit);
+    if (iconFit) {
+      data.iconFit = iconFit;
+    } else if (configName === "UNTITLED") {
+      delete data.iconFit;
+    } else {
+      data.iconFit = null;
+    }
     const agePublicKey = `${data["age-public-key"] || ""}`.trim();
     if (agePublicKey) {
       data["age-public-key"] = agePublicKey;
@@ -1399,6 +1415,7 @@ const urlValidator = (val: string): Promise<boolean> => {
       return rewriteGithubUrl(appearanceSetting.value.isDefaultIcon ? logoIcon : logoRedIcon)
     }
   })
+  const formIconFit = computed(() => resolveImageFit(form.iconFit, appearanceSetting.value.iconFit));
   const iconPopupVisible = ref(false)
   const showIconPopup = () => {
     iconPopupVisible.value = true
@@ -2145,7 +2162,7 @@ const handleEditGlobalClick = () => {
           margin-right: 12px;
 
           :deep(img) {
-            object-fit: contain;
+            object-fit: var(--icon-fit, cover);
 
             &:not(.nut-icon__img) {
               filter: brightness(var(--img-brightness));

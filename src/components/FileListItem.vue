@@ -11,7 +11,7 @@
     <div
       class="sub-item-wrapper"
       :class="{ 'is-dual-column': props.isDualColumn }"
-      :style="{ padding: itemPadding }"
+      :style="{ padding: itemPadding, '--icon-fit': iconFit }"
       @click="handleContentClick"
     >
       <div
@@ -255,6 +255,7 @@
   import { useSubsStore } from '@/store/subs';
   import { getString } from '@/utils/flowTransfer';
   import { createGithubProxyUrlRewriter } from '@/utils/githubProxy';
+  import { resolveImageFit } from '@/utils/iconFit';
   import { isMobile } from '@/utils/isMobile';
   import { openManagedDeleteDialog } from '@/utils/archive';
   import FilePreview from '@/views/FilePreview.vue';
@@ -372,6 +373,9 @@
   };
   const isIconColor = computed(() => {
     return props.file.isIconColor !== false;
+  });
+  const iconFit = computed(() => {
+    return resolveImageFit(props.file.iconFit, appearanceSetting.value.iconFit);
   });
 
   const collectionDetail = computed(() => {
@@ -673,7 +677,7 @@
       border-radius: 12px;
 
       img {
-        object-fit: contain;
+        object-fit: var(--icon-fit, cover);
         border-radius: 10px;
       }
     }

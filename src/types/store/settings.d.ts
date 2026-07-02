@@ -4,6 +4,7 @@ type EditorCommonDisplayMode = 'expanded' | 'collapsed' | 'hidden';
 type EditorSectionFoldMode = 'expanded' | 'collapsed';
 type EditorGroupingMode = 'edit-only' | 'disabled' | 'always';
 type GistUploadMode = 'base64' | 'plaintext' | 'age';
+type ImageFit = import('@/utils/iconFit').ImageFit;
 
 type SettingsStoreState = SettingsBase & SettingsPostData;
 
@@ -54,6 +55,7 @@ interface SettingsPostData {
     isLeftRight?: boolean; // 卡片右滑呼出
     isDefaultIcon?: boolean; // 恢复默认图标
     isShowIcon?: boolean; // 展示图标
+    iconFit?: ImageFit; // 图标填充模式
     isIconColor?: boolean; // 自定义图标使用原始颜色
     isEditorCommon?: boolean; // 展示编辑页常用配置(旧版兼容)
     editorCommonDisplayMode?: EditorCommonDisplayMode; // 编辑页常用配置展示模式

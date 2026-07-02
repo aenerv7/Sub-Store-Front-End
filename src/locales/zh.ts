@@ -442,6 +442,9 @@ export default {
         isIconColor: {
           label: '图标原色',
         },
+        iconFit: {
+          label: '图标填充模式',
+        },
         ignoreFailedRemoteSub: {
           label: '订阅失败处理',
           disabled: '严格报错',
@@ -1305,6 +1308,19 @@ export default {
       confirm: '确定',
     },
   },
+  imageFit: {
+    inherit: '跟随全局设置',
+    contain: 'contain',
+    cover: 'cover',
+    fill: 'fill',
+    none: 'none',
+    'scale-down': 'scale-down',
+    tips: {
+      title: '图片填充模式',
+      content: 'contain:<br>保持宽高缩放图片，使图片的长边能完全显示出来<br><br>cover:<br>保持宽高缩放图片，使图片的短边能完全显示出来，裁剪长边<br><br>fill:<br>拉伸图片，使图片填满元素<br><br>none:<br>保持图片原有尺寸<br><br>scale-down:<br>取 none 或 contain 中较小的一个',
+      close: '关闭',
+    },
+  },
   themeSettingPage: {
     themeSettingTitle: '外观设置',
     // themeSettingDes: '',
@@ -1401,6 +1417,7 @@ export default {
     isIC: '自定义图标使用原始颜色',
     isDefaultIcon: '恢复默认图标',
     isShowIcon: '展示图标',
+    iconFit: '图标填充模式',
     isSubItemMenuFold: '收纳订阅页菜单功能',
     isEditorCommon: '详情页常用配置',
     editorCommon: {

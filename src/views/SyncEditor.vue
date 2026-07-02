@@ -29,7 +29,7 @@
         <nut-image
           :class="{ 'sub-item-customer-icon': !form.isIconColor }"
           :src="syncIcon"
-          fit="cover"
+          :fit="formIconFit"
           show-loading
           @click="showIconPopup"
         />
@@ -139,6 +139,7 @@
             <nut-switch v-model="form.isIconColor" />
           </div>
         </nut-form-item>
+        <ImageFitPicker v-model="form.iconFit" :fallback-value="appearanceSetting.iconFit" />
         </div>
         <div v-show="!editorTabsEnabled || activeEditorTab === 'content'" class="editor-tab-content">
 
@@ -318,6 +319,7 @@
 import TagPopup from "@/components/TagPopup.vue";
 import AgeKeyHelper from "@/components/AgeKeyHelper.vue";
 import EditorGroupingTips from "@/components/EditorGroupingTips.vue";
+import ImageFitPicker from "@/components/ImageFitPicker.vue";
 import IconPopup from "@/views/icon/IconPopup.vue";
 import { useAppNotifyStore } from "@/store/appNotify";
 import { useArtifactsStore } from "@/store/artifacts";
@@ -333,6 +335,7 @@ import {
 } from "@/utils/editorTabState";
 import { getEditorTabForValidationErrors } from "@/utils/editorTabValidation";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
+import { normalizeOptionalImageFit, resolveImageFit } from "@/utils/iconFit";
 import { Dialog, Toast } from "@nutui/nutui";
 import { storeToRefs } from "pinia";
 import { computed, reactive, ref, toRaw, watch, watchEffect, onMounted } from "vue";
@@ -352,6 +355,7 @@ const SYNC_EDITOR_PROP_TO_TAB: Partial<Record<string, SyncEditorTab>> = {
   tag: "display",
   icon: "display",
   isIconColor: "display",
+  iconFit: "display",
   source: "content",
   "age-public-key": "content",
   cron: "content",
@@ -441,6 +445,7 @@ const form = reactive<any>({
   tag: "",
   icon: "",
   isIconColor: true,
+  iconFit: undefined,
   source: "",
   type: "file",
   platform: "Stash",
@@ -459,6 +464,7 @@ const syncIcon = computed(() => {
 
   return rewriteGithubUrl(icon) || icon;
 });
+const formIconFit = computed(() => resolveImageFit(form.iconFit, appearanceSetting.value.iconFit));
 
 const sourceOptions = computed(() => {
   const subsNameList = subsStore.subs.map(sub => ({
@@ -573,6 +579,7 @@ watchEffect(() => {
   form.tag = Array.isArray(sourceData.tag) ? sourceData.tag.join(", ") : sourceData.tag || "";
   form.icon = sourceData.icon || "";
   form.isIconColor = sourceData.isIconColor !== false;
+  form.iconFit = normalizeOptionalImageFit(sourceData.iconFit);
   form.source = sourceData.source;
   form.type = sourceData.type;
   form["age-public-key"] = sourceData["age-public-key"] || "";
@@ -722,6 +729,14 @@ const submit = () => {
     }
 
     const data: any = JSON.parse(JSON.stringify(toRaw(form)));
+    const iconFit = normalizeOptionalImageFit(form.iconFit);
+    if (iconFit) {
+      data.iconFit = iconFit;
+    } else if (isEditMode.value) {
+      data.iconFit = null;
+    } else {
+      delete data.iconFit;
+    }
     const agePublicKey = `${data["age-public-key"] || ""}`.trim();
     if (agePublicKey) {
       data["age-public-key"] = agePublicKey;

@@ -10,7 +10,7 @@
     <div
       class="sub-item-wrapper"
       :class="{ 'is-dual-column': props.isDualColumn }"
-      :style="{ padding: itemPadding }"
+      :style="{ padding: itemPadding, '--icon-fit': iconFit }"
       @click="handleContentClick"
     >
       <div
@@ -342,6 +342,7 @@ import { useSettingsStore } from "@/store/settings";
 import { useSubsStore } from "@/store/subs";
 import { getString } from "@/utils/flowTransfer";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
+import { resolveImageFit } from "@/utils/iconFit";
 import { isMobile } from "@/utils/isMobile";
 import { openManagedDeleteDialog } from "@/utils/archive";
 import CompareTable from "@/views/CompareTable.vue";
@@ -445,6 +446,9 @@ const rewriteGithubUrl = (url?: string | null) => {
 
 const isIconColor = computed(() => {
   return props[props.type].isIconColor !== false;
+});
+const iconFit = computed(() => {
+  return resolveImageFit(props[props.type].iconFit, appearanceSetting.value.iconFit);
 });
 
 const collectionDetail = computed(() => {
@@ -1035,7 +1039,7 @@ const refreshSubFlowsIfNeeded = async () => {
     border-radius: 12px;
 
     img {
-      object-fit: contain;
+      object-fit: var(--icon-fit, cover);
       border-radius: 10px;
     }
   }

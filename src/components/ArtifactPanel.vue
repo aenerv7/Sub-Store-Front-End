@@ -35,6 +35,7 @@
           <nut-switch v-model="isIconColor" />
         </div>
       </nut-form-item>
+      <ImageFitPicker v-model="editPanelData.iconFit" :fallback-value="appearanceSetting.iconFit" />
       <nut-form-item
         :label="$t(`syncPage.addArtForm.name.label`)"
         prop="name"
@@ -158,13 +159,19 @@
 
 <script lang="ts" setup>
   import { useArtifactsStore } from '@/store/artifacts';
+  import { useSettingsStore } from '@/store/settings';
   import { useSubsStore } from '@/store/subs';
+  import ImageFitPicker from '@/components/ImageFitPicker.vue';
   import IconPopup from '@/views/icon/IconPopup.vue';
+  import { normalizeOptionalImageFit } from '@/utils/iconFit';
   import { Dialog, Toast } from '@nutui/nutui';
+  import { storeToRefs } from 'pinia';
   import { computed, ref, toRaw, watchEffect } from 'vue';
   import { useI18n } from 'vue-i18n';
   const { t } = useI18n();
   const artifactsStore = useArtifactsStore();
+  const settingsStore = useSettingsStore();
+  const { appearanceSetting } = storeToRefs(settingsStore);
   const isInit = ref(false);
   const isEditMode = ref(false);
   const ruleForm = ref();
@@ -192,6 +199,7 @@
     displayName: '',
     icon: '',
     isIconColor: true,
+    iconFit: undefined,
     source: '',
     type: 'file',
     platform: 'Stash',
@@ -303,7 +311,15 @@
         return;
       }
 
-      const data = toRaw(editPanelData.value);
+      const data = { ...toRaw(editPanelData.value) };
+      const iconFit = normalizeOptionalImageFit(editPanelData.value.iconFit);
+      if (iconFit) {
+        data.iconFit = iconFit;
+      } else if (isEditMode.value) {
+        data.iconFit = null;
+      } else {
+        delete data.iconFit;
+      }
       Toast.loading(t('syncPage.addArtForm.submitLoading'), {
         cover: true,
         id: 'add-artifact-loading',
@@ -370,6 +386,7 @@
     if (!isInit.value && name) {
       const artifact = artifactsStore.artifacts.find(art => art.name === name);
       editPanelData.value = JSON.parse(JSON.stringify(toRaw(artifact)));
+      editPanelData.value.iconFit = normalizeOptionalImageFit(editPanelData.value.iconFit);
       sourceModel.value.push(
         editPanelData.value.type,
         editPanelData.value.source

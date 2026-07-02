@@ -454,6 +454,9 @@ export default {
         isIconColor: {
           label: 'Custom Icon Use Original Color',
         },
+        iconFit: {
+          label: "Icon fit",
+        },
         ignoreFailedRemoteSub: {
           label: "Sub Failure Handling",
           disabled: 'Strict Errors',
@@ -1353,6 +1356,19 @@ export default {
       confirm: "Confirm",
     },
   },
+  imageFit: {
+    inherit: "Follow global setting",
+    contain: "contain",
+    cover: "cover",
+    fill: "fill",
+    none: "none",
+    "scale-down": "scale-down",
+    tips: {
+      title: "Image fit",
+      content: "contain:<br>Scale the image while keeping its aspect ratio so the long side is fully visible<br><br>cover:<br>Scale the image while keeping its aspect ratio so the short side is fully visible, cropping the long side<br><br>fill:<br>Stretch the image to fill the element<br><br>none:<br>Keep the original image size<br><br>scale-down:<br>Use the smaller result of none or contain",
+      close: "Close",
+    },
+  },
   themeSettingPage: {
     themeSettingTitle: "Appearance",
     auto: "Auto Switch",
@@ -1448,6 +1464,7 @@ export default {
     isIC: "Use original color for custom icons",
     isDefaultIcon: "Restore default icon",
     isShowIcon: 'Show icon',
+    iconFit: "Icon fit",
     isSubItemMenuFold: "Fold sub item menu",
     isEditorCommon: "Detail page common settings",
     editorCommon: {
