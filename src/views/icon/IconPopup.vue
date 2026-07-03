@@ -108,20 +108,32 @@
             </nut-button>
           </div>
         </div>
-        <div v-else-if="iconData.length" class="icon-list">
-          <div
-            v-for="(icon, index) in iconData"
-            :key="index"
-            class="icon-item"
-            @click="handleIcon(icon)"
-          >
-            <nut-image
-              :src="rewriteGithubUrl(icon.url)"
-              :fit="globalIconFit"
-              lazy-load
-              show-loading
-            />
-            <p>{{ icon.name }}</p>
+        <div v-else-if="iconData.length" class="icon-list" :ref="(el) => { (containerProps.ref as any).value = el }" @scroll="containerProps.onScroll">
+          <div v-bind="wrapperProps">
+            <div
+              v-for="row in virtualRows"
+              :key="row.index"
+              class="icon-row"
+            >
+              <div
+                v-for="(icon, iconIndex) in row.data"
+                :key="iconIndex"
+                class="icon-item"
+                :style="{
+                  width: iconItemWidth,
+                  marginRight: iconIndex < row.data.length - 1 ? iconItemGap : '0',
+                }"
+                @click="handleIcon(icon)"
+              >
+                <nut-image
+                  :src="rewriteGithubUrl(icon.url)"
+                  :fit="globalIconFit"
+                  lazy-load
+                  show-loading
+                />
+                <p>{{ icon.name }}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div v-else class="icon-state-wrapper">
@@ -150,7 +162,7 @@
 <script setup lang="ts">
 import DesktopPicker from "@/components/DesktopPicker.vue";
 import { Toast } from "@nutui/nutui";
-import { useDebounceFn } from "@vueuse/core";
+import { useDebounceFn, useVirtualList } from "@vueuse/core";
 import axios from "axios";
 import { storeToRefs } from "pinia";
 import { computed, reactive, ref, watch } from "vue";
@@ -161,6 +173,7 @@ import { useSettingsStore } from "@/store/settings";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
 import { normalizeImageFit } from "@/utils/iconFit";
 import { getApiRequestTimeout } from "@/utils/requestTimeout";
+import { useWideScreenNarrowMode } from "@/hooks/useWideScreenNarrowMode";
 
 const props = defineProps({
   visible: {
@@ -202,6 +215,8 @@ const performSearch = () => {
       item.name.toLowerCase().includes(lowercaseTerm),
     );
   }
+  // 搜索后滚动到顶部
+  scrollToRow(0);
 };
 
 // 使用 useDebounceFn 创建防抖搜索函数
@@ -210,6 +225,32 @@ const debouncedSearch = useDebounceFn(performSearch, 500);
 const iconData = computed(() => {
   return searchResult.value;
 });
+// 宽屏（>=768px）每行显示 8 个，窄屏每行显示 4 个
+const { isWideScreen } = useWideScreenNarrowMode();
+const iconsPerRow = computed(() => (isWideScreen.value ? 8 : 4));
+const iconItemWidth = computed(() => `${(96 / iconsPerRow.value).toFixed(4)}%`);
+const iconItemGap = computed(() => `calc(4% / ${iconsPerRow.value - 1})`);
+// 将图标数据按每行数量分组
+const iconRows = computed(() => {
+  const rows: { name: string; url: string }[][] = [];
+  const icons = iconData.value;
+  const perRow = iconsPerRow.value;
+  for (let i = 0; i < icons.length; i += perRow) {
+    rows.push(icons.slice(i, i + perRow));
+  }
+  return rows;
+});
+// 使用 useVirtualList 进行虚拟滚动
+const {
+  list: virtualRows,
+  containerProps,
+  wrapperProps,
+  scrollTo: scrollToRow,
+} = useVirtualList(iconRows, {
+  itemHeight: 90,
+  overscan: 5,
+});
+
 const globalIconFit = computed(() => normalizeImageFit(appearanceSetting.value.iconFit));
 const githubUrlRewriter = computed(() => {
   return createGithubProxyUrlRewriter(githubProxy.value, githubProxyRegex.value);
@@ -560,43 +601,38 @@ defineExpose({ show, hide, close });
     margin-top: 8px;
   }
   .icon-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
     height: 100%;
     min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
-    .icon-item {
-      text-align: center;
-      width: 24%;
+    .icon-row {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-      &:not(:nth-child(4n)) {
-        margin-right: calc(4% / 3);
-      }
-      .nut-image {
-        cursor: pointer;
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-        overflow: hidden;
-      }
-      .sub-item-customer-icon {
-        :deep(img) {
-          & {
-            opacity: 0.8;
-            filter: brightness(var(--img-brightness));
+      padding-bottom: 20px;
+      .icon-item {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .nut-image {
+          cursor: pointer;
+          width: 50px;
+          height: 50px;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        .sub-item-customer-icon {
+          :deep(img) {
+            & {
+              opacity: 0.8;
+              filter: brightness(var(--img-brightness));
+            }
           }
         }
-      }
-      p {
-        font-size: 12px;
-        color: var(--primary-text-color);
-        word-break: break-all;
+        p {
+          font-size: 12px;
+          color: var(--primary-text-color);
+          word-break: break-all;
+        }
       }
     }
   }
