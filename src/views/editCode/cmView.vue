@@ -76,6 +76,9 @@
             v-if="isToolbarActionEnabled('language')"
             class="language-select-wrap"
           >
+            <span class="language-select-sizer" aria-hidden="true">{{
+              selectedLanguageLabel
+            }}</span>
             <select
               v-model="selectedLanguage"
               class="language-select"
@@ -371,6 +374,14 @@ const languageOptions = computed(() =>
         }
   )
 );
+
+const selectedLanguageLabel = computed(() => {
+  const currentValue = normalizeEditorLanguage(selectedLanguage.value, "auto");
+  const option = languageOptions.value.find(
+    (item) => item.value === currentValue
+  );
+  return option ? option.label : "";
+});
 
 const createShikiHighlight = (language = activeLanguage.value) =>
   shikiHighlight({
@@ -1030,6 +1041,20 @@ const pasteNav = async () => {
   margin-right: 6px;
   color: var(--second-text-color);
   flex: 0 1 auto;
+  min-width: 0;
+}
+
+.language-select-sizer {
+  box-sizing: border-box;
+  height: 24px;
+  max-width: 45vw;
+  padding: 0 22px 0 8px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  line-height: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 .language-select-wrap::after {
@@ -1049,11 +1074,12 @@ const pasteNav = async () => {
 .language-select {
   -webkit-appearance: none;
   appearance: none;
-  display: block;
   box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 24px;
-  width: 123px;
-  max-width: 34vw;
+  width: 100%;
   padding: 0 22px 0 8px;
   border: 1px solid #8b8b8b66;
   border-radius: 6px;
@@ -1108,8 +1134,13 @@ const pasteNav = async () => {
     margin-right: 3px;
   }
 
+  .language-select-sizer {
+    max-width: 42vw;
+    padding-right: 18px;
+    padding-left: 7px;
+  }
+
   .language-select {
-    width: 90px;
     padding-right: 18px;
     padding-left: 7px;
   }

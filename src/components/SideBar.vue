@@ -32,7 +32,7 @@
         </div>
 
         <div 
-          v-show="env?.feature?.share"
+          v-show="shouldShowShareTab"
           class="menu-item" 
           :class="{ active: activeTab === 3 }" 
           @click="router.push('/shares')"
@@ -135,6 +135,20 @@ const shouldHideSyncTab = computed(() => {
   }
 
   return !!appearanceSetting.value.istabBar;
+});
+const shouldHideShareTab = computed(() => {
+  if (hasCachedAppearanceNavigationSetting.value) {
+    return !!appearanceSetting.value.istabBar3;
+  }
+
+  if (!hasFetchedSettings.value) {
+    return false;
+  }
+
+  return !!appearanceSetting.value.istabBar3;
+});
+const shouldShowShareTab = computed(() => {
+  return !!env.value?.feature?.share && !shouldHideShareTab.value;
 });
 
 </script>
