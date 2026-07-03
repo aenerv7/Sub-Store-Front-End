@@ -15,6 +15,7 @@ const LIST_PAGE_VIEW_MODE_STORAGE_KEY = "appearanceSetting.listPageViewMode";
 const NARROW_MODE_LIST_PAGE_VIEW_MODE_STORAGE_KEY = "appearanceSetting.listPageViewModeInWideScreenNarrowMode";
 const WIDE_SCREEN_NARROW_MODE_STORAGE_KEY = "appearanceSetting.useNarrowModeOnWideScreen";
 const EDITOR_GROUPING_MODE_STORAGE_KEY = "appearanceSetting.editorGroupingMode";
+const SIMPLE_MODE_CACHE_STORAGE_KEY = "appearanceSetting.isSimpleMode";
 const TAB_BAR_CACHE_STORAGE_KEY = "appearanceSetting.istabBar";
 const TAB_BAR2_CACHE_STORAGE_KEY = "appearanceSetting.istabBar2";
 const TAB_BAR3_CACHE_STORAGE_KEY = "appearanceSetting.istabBar3";
@@ -104,6 +105,13 @@ const getCachedAppearanceBoolean = (storageKey: string, legacyStorageKey: string
   if (legacyValue === "1") return true;
 
   return undefined;
+};
+
+const getCachedSimpleMode = () => {
+  const cachedValue = getCachedAppearanceBoolean(SIMPLE_MODE_CACHE_STORAGE_KEY, "isSimpleMode");
+  if (cachedValue !== undefined) return cachedValue;
+
+  return localStorage.getItem("isSimpleMode") === "0" ? false : undefined;
 };
 
 const hasCachedAppearanceNavigationSetting = () => {
@@ -210,7 +218,7 @@ export const useSettingsStore = defineStore("settingsStore", {
         light: "light",
       },
       appearanceSetting: {
-        isSimpleMode: true,
+        isSimpleMode: getCachedSimpleMode() ?? true,
         isLeftRight: false,
         isDefaultIcon: false,
         isIconColor: false,
@@ -265,7 +273,10 @@ export const useSettingsStore = defineStore("settingsStore", {
       const manualSubscriptionsDisplayMode = normalizeManualSubscriptionsDisplayMode(appearanceSetting);
       const editorGroupingMode = normalizeEditorGroupingMode(appearanceSetting);
 
-      this.appearanceSetting.isSimpleMode = appearanceSetting?.isSimpleMode ?? true;
+      this.appearanceSetting.isSimpleMode =
+        appearanceSetting?.isSimpleMode
+        ?? getCachedSimpleMode()
+        ?? true;
       this.appearanceSetting.isLeftRight = appearanceSetting?.isLeftRight ?? "";
       this.appearanceSetting.isDefaultIcon = appearanceSetting?.isDefaultIcon ?? "";
       this.appearanceSetting.isIconColor = appearanceSetting?.isIconColor ?? "";
@@ -297,6 +308,10 @@ export const useSettingsStore = defineStore("settingsStore", {
       syncCachedListPageViewMode(
         NARROW_MODE_LIST_PAGE_VIEW_MODE_STORAGE_KEY,
         this.appearanceSetting.listPageViewModeInWideScreenNarrowMode,
+      );
+      localStorage.setItem(
+        SIMPLE_MODE_CACHE_STORAGE_KEY,
+        this.appearanceSetting.isSimpleMode ? "1" : "0",
       );
 
       if (this.appearanceSetting.useNarrowModeOnWideScreen) {
