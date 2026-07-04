@@ -1470,6 +1470,12 @@ export default {
     editorCommon: {
       title: "Detail page common settings",
     },
+    actionButtons: {
+      title: "Node/File action buttons",
+      responsive: "Responsive",
+      compact: "Compact",
+      loose: "Loose",
+    },
     editorGrouping: {
       title: "Use grouping on detail pages",
       editOnly: "Edit pages only",

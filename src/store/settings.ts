@@ -153,6 +153,10 @@ const isEditorSectionFoldMode = (value: unknown): value is EditorSectionFoldMode
   return value === "expanded" || value === "collapsed";
 };
 
+const isActionButtonsDisplayMode = (value: unknown): value is ActionButtonsDisplayMode => {
+  return value === "responsive" || value === "compact" || value === "loose";
+};
+
 const normalizeEditorCommonDisplayMode = (
   appearanceSetting?: SettingsPostData["appearanceSetting"],
 ): EditorCommonDisplayMode => {
@@ -175,6 +179,16 @@ const normalizeManualSubscriptionsDisplayMode = (
   }
 
   return "collapsed";
+};
+
+const normalizeActionButtonsDisplayMode = (
+  appearanceSetting?: SettingsPostData["appearanceSetting"],
+): ActionButtonsDisplayMode => {
+  if (isActionButtonsDisplayMode(appearanceSetting?.actionButtonsDisplayMode)) {
+    return appearanceSetting.actionButtonsDisplayMode;
+  }
+
+  return "responsive";
 };
 
 const normalizeEditorGroupingMode = (
@@ -229,6 +243,7 @@ export const useSettingsStore = defineStore("settingsStore", {
         editorCommonDisplayMode: "expanded",
         manualSubscriptionsDisplayMode: "collapsed",
         editorGroupingMode: getCachedEditorGroupingMode() ?? "edit-only",
+        actionButtonsDisplayMode: "responsive",
         isSimpleReicon: false,
         isSubItemMenuFold: true,
         showFloatingRefreshButton: false,
@@ -272,6 +287,7 @@ export const useSettingsStore = defineStore("settingsStore", {
       const editorCommonDisplayMode = normalizeEditorCommonDisplayMode(appearanceSetting);
       const manualSubscriptionsDisplayMode = normalizeManualSubscriptionsDisplayMode(appearanceSetting);
       const editorGroupingMode = normalizeEditorGroupingMode(appearanceSetting);
+      const actionButtonsDisplayMode = normalizeActionButtonsDisplayMode(appearanceSetting);
 
       this.appearanceSetting.isSimpleMode =
         appearanceSetting?.isSimpleMode
@@ -286,6 +302,7 @@ export const useSettingsStore = defineStore("settingsStore", {
       this.appearanceSetting.editorCommonDisplayMode = editorCommonDisplayMode;
       this.appearanceSetting.manualSubscriptionsDisplayMode = manualSubscriptionsDisplayMode;
       this.appearanceSetting.editorGroupingMode = editorGroupingMode;
+      this.appearanceSetting.actionButtonsDisplayMode = actionButtonsDisplayMode;
       this.appearanceSetting.isEditorCommon = editorCommonDisplayMode !== "hidden";
       this.appearanceSetting.isSimpleReicon = appearanceSetting?.isSimpleReicon ?? "";
       this.appearanceSetting.isSubItemMenuFold = appearanceSetting?.isSubItemMenuFold ?? true;

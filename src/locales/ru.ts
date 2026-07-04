@@ -1512,6 +1512,12 @@ export default {
     "editorCommon": {
       "title": "Общие настройки страницы деталей"
     },
+    "actionButtons": {
+      "title": "Кнопки операций узлов/файлов",
+      "responsive": "Адаптивно",
+      "compact": "Компактно",
+      "loose": "Свободно"
+    },
     "editorGrouping": {
       "title": "Группировка страниц деталей",
       "editOnly": "Только страницы редактирования",

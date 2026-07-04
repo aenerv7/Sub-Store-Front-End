@@ -107,6 +107,15 @@
         { text: $t(`moreSettingPage.editorDisplayMode.hidden`), value: 'hidden' }
       ]" :title="$t(`moreSettingPage.editorCommon.title`)" @confirm="editorCommonDisplayModeConfirm">
       </DesktopPicker>
+      <nut-cell class="cell-item" :title="$t(`moreSettingPage.actionButtons.title`)" :desc="actionButtonsDisplayModeName"
+        @click="()=>{showActionButtonsDisplayModePicker=true}" is-link>
+      </nut-cell>
+      <DesktopPicker v-model="actionButtonsDisplayModeValue" v-model:visible="showActionButtonsDisplayModePicker" :columns="[
+        { text: $t(`moreSettingPage.actionButtons.responsive`), value: 'responsive' },
+        { text: $t(`moreSettingPage.actionButtons.compact`), value: 'compact' },
+        { text: $t(`moreSettingPage.actionButtons.loose`), value: 'loose' }
+      ]" :title="$t(`moreSettingPage.actionButtons.title`)" @confirm="actionButtonsDisplayModeConfirm">
+      </DesktopPicker>
       <nut-cell class="cell-item" :title="$t(`moreSettingPage.manualSubscriptions.title`)" :desc="manualSubscriptionsDisplayModeName"
         @click="()=>{showManualSubscriptionsDisplayModePicker=true}" is-link>
       </nut-cell>
@@ -257,6 +266,7 @@
   const subProgressStyleValue = ref(['hidden']);
   const iconFitValue = ref<ImageFit[]>([DEFAULT_IMAGE_FIT]);
   const editorCommonDisplayModeValue = ref<EditorCommonDisplayMode[]>(['expanded']);
+  const actionButtonsDisplayModeValue = ref<ActionButtonsDisplayMode[]>(['responsive']);
   const manualSubscriptionsDisplayModeValue = ref<EditorSectionFoldMode[]>(['collapsed']);
   const editorGroupingModeValue = ref<EditorGroupingMode[]>(['edit-only']);
 
@@ -268,6 +278,7 @@
   const showIconFitPicker = ref(false);
   const showCreateItemPositionPicker = ref(false);
   const showEditorCommonDisplayModePicker = ref(false);
+  const showActionButtonsDisplayModePicker = ref(false);
   const showManualSubscriptionsDisplayModePicker = ref(false);
   const showEditorGroupingModePicker = ref(false);
   const shareBtnVisible = computed(() => {
@@ -332,6 +343,16 @@
       ...appearanceSetting.value,
       editorCommonDisplayMode,
       isEditorCommon: editorCommonDisplayMode !== 'hidden',
+    }
+    changeAppearanceSetting({ appearanceSetting: data });
+  };
+  const actionButtonsDisplayModeName = computed(() => {
+    return t(`moreSettingPage.actionButtons.${actionButtonsDisplayModeValue.value[0] || 'responsive'}`);
+  });
+  const actionButtonsDisplayModeConfirm = ({ selectedValue }) => {
+    const data = {
+      ...appearanceSetting.value,
+      actionButtonsDisplayMode: selectedValue[0] || 'responsive',
     }
     changeAppearanceSetting({ appearanceSetting: data });
   };
@@ -678,6 +699,7 @@
     hidePublicLinkActionButton.value = appearanceSetting.value.hidePublicLinkActionButton ?? false;
     subProgressStyleValue.value = [appearanceSetting.value.subProgressStyle];
     editorCommonDisplayModeValue.value = [appearanceSetting.value.editorCommonDisplayMode || 'expanded'];
+    actionButtonsDisplayModeValue.value = [appearanceSetting.value.actionButtonsDisplayMode || 'responsive'];
     manualSubscriptionsDisplayModeValue.value = [appearanceSetting.value.manualSubscriptionsDisplayMode || 'collapsed'];
     editorGroupingModeValue.value = [appearanceSetting.value.editorGroupingMode || 'edit-only'];
     // SimpleSwitch.value = isSimpleMode.value;

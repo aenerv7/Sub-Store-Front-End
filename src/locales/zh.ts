@@ -1423,6 +1423,12 @@ export default {
     editorCommon: {
       title: '详情页常用配置',
     },
+    actionButtons: {
+      title: '节点/文件操作按钮',
+      responsive: '响应式',
+      compact: '紧凑',
+      loose: '宽松',
+    },
     editorGrouping: {
       title: '详情页使用分组',
       editOnly: '仅编辑页',
