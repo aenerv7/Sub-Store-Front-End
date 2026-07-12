@@ -275,7 +275,8 @@ export default {
       },
     },
     copyNotify: {
-      succeed: "Successfully copied link!",
+      succeed: "Link copied successfully\nUse sync to avoid exposing the path",
+      succeedWithShare: "Link copied successfully\nUse share/sync to avoid exposing the path",
       failed: "Failed to copy subscription link!\n{e}",
     },
     copyConfigNotify: {
@@ -677,6 +678,7 @@ export default {
             "mieru",
             "sudoku",
             "MASQUE",
+            "Shadow QUIC",
             "NaïveProxy",
             "AnyTLS",
             'TrustTunnel',

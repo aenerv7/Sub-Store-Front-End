@@ -403,7 +403,7 @@ const onClickPreviews = () => {
       type: "share",
       url,
       general: t("subPage.panel.general"),
-      notify: t("subPage.copyNotify.succeed"),
+      notify: t("subPage.copyNotify.succeedWithShare"),
       includeUnsupportedProxyLabel: t("subPage.panel.options.includeUnsupportedProxy"),
       prettyYamlLabel: t("subPage.panel.options.prettyYaml"),
       tipsTitle: t("subPage.panel.tips.title"),

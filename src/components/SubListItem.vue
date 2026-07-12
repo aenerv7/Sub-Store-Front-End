@@ -865,7 +865,7 @@ const openPreviewPanel = () => {
       displayName,
       type: props.type,
       general: t("subPage.panel.general"),
-      notify: t("subPage.copyNotify.succeed"),
+      notify: t(`subPage.copyNotify.${shareBtnVisible.value ? "succeedWithShare" : "succeed"}`),
       includeUnsupportedProxyLabel: t("subPage.panel.options.includeUnsupportedProxy"),
       prettyYamlLabel: t("subPage.panel.options.prettyYaml"),
       tipsTitle: t(`subPage.panel.tips.title`),
@@ -974,7 +974,7 @@ const onClickCopyLink = async () => {
   } else {
     await copyFallback(url);
   }
-  showNotify({ title: t("subPage.copyNotify.succeed") });
+  showNotify({ title: t(`subPage.copyNotify.${shareBtnVisible.value ? "succeedWithShare" : "succeed"}`) });
 };
 
 const onClickRefresh = async () => {

@@ -265,7 +265,8 @@ export default {
       }
     },
     "copyNotify": {
-      "succeed": "Ссылка успешно скопирована!",
+      "succeed": "Ссылка успешно скопирована\nИспользуйте синхронизацию, чтобы не раскрывать путь",
+      "succeedWithShare": "Ссылка успешно скопирована\nИспользуйте обмен/синхронизацию, чтобы не раскрывать путь",
       "failed": "Не удалось скопировать ссылку на подписку!\n{e}"
     },
     "copyConfigNotify": {
@@ -674,6 +675,7 @@ export default {
             "mieru",
             "sudoku",
             "MASQUE",
+            "Shadow QUIC",
             "NaïveProxy",
             "AnyTLS",
             "TrustTunnel",

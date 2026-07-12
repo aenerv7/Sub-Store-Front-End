@@ -270,7 +270,8 @@ export default {
       },
     },
     copyNotify: {
-      succeed: '复制订阅链接成功\n请导入代理工具使用',
+      succeed: '复制链接成功\n使用同步功能可不泄露路径',
+      succeedWithShare: '复制链接成功\n使用分享/同步功能可不泄露路径',
       failed: '复制订阅链接失败\n{e}',
     },
     copyConfigNotify: {
@@ -700,6 +701,7 @@ export default {
             'mieru',
             'sudoku',
             'MASQUE',
+            'Shadow QUIC',
             'NaïveProxy',
             'AnyTLS',
             'TrustTunnel',
