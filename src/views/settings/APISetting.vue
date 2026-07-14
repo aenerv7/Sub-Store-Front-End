@@ -211,7 +211,7 @@
       >
         {{ $t(`apiSettingPage.apiSettingWiki`) }}</a>
       <br/>
-      4. <a href="https://t.me/zhetengsha/218" target="_blank">{{ $t('magicPath.troubleshooting') }}</a>
+      4. <a href="https://telegram.me/zhetengsha/218" target="_blank">{{ $t('magicPath.troubleshooting') }}</a>
     </div>
   </div>
 </template>

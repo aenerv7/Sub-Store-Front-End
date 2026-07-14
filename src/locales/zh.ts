@@ -477,7 +477,7 @@ export default {
           label: '透传单条订阅流量信息',
           tips: {
             title: '透传单条订阅流量信息',
-            content: '默认透传第一个单条订阅流量信息。\n\n若需要合并组合订阅中所有单条订阅的流量，可使用脚本 https://t.me/zhetengsha/3070',
+            content: '默认透传第一个单条订阅流量信息。\n\n若需要合并组合订阅中所有单条订阅的流量，可使用脚本 https://telegram.me/zhetengsha/3070',
             okText: '查看',
           },
         },
@@ -1048,7 +1048,7 @@ export default {
         label: '上传产物',
         tips: {
           title: '上传产物',
-          content: '后端需 >= 2.23.16\n\n开启后，定时同步会在生成产物后上传到当前同步仓库（如 Gist）。\n\n关闭后，定时同步只执行产物生成并更新上次执行时间，不上传，也不会生成新的 Gist 链接。适合刷新缓存，或在订阅/文件脚本中执行自己的上传、备份逻辑，例如上传到其他 Gist，或通过 WebDAV 备份/恢复数据。\n\n参考:\nhttps://t.me/zhetengsha/1428\nhttps://t.me/zhetengsha/5261',
+          content: '后端需 >= 2.23.16\n\n开启后，定时同步会在生成产物后上传到当前同步仓库（如 Gist）。\n\n关闭后，定时同步只执行产物生成并更新上次执行时间，不上传，也不会生成新的 Gist 链接。适合刷新缓存，或在订阅/文件脚本中执行自己的上传、备份逻辑，例如上传到其他 Gist，或通过 WebDAV 备份/恢复数据。\n\n参考:\nhttps://telegram.me/zhetengsha/1428\nhttps://telegram.me/zhetengsha/5261',
         },
       },
       cron: {

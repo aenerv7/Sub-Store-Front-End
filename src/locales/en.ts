@@ -489,7 +489,7 @@ export default {
           label: 'Pass Through Single Subscription Traffic Info',
           tips: {
             title: 'Pass Through Single Subscription Traffic Info',
-            content: 'By default, the first single subscription traffic info is passed through.\n\nTo merge traffic info from all single subscriptions in the collection, use the script at https://t.me/zhetengsha/3070',
+            content: 'By default, the first single subscription traffic info is passed through.\n\nTo merge traffic info from all single subscriptions in the collection, use the script at https://telegram.me/zhetengsha/3070',
             okText: 'View',
           },
         },
@@ -1085,7 +1085,7 @@ export default {
         tips: {
           title: "Upload Artifact",
           content:
-            "Requires backend >= 2.23.16.\n\nWhen enabled, scheduled sync uploads the generated artifact to the current sync storage, such as Gist.\n\nWhen disabled, scheduled sync only runs artifact generation and updates the last run time. It does not upload or create a new Gist URL. Use this to refresh caches, or to run custom upload/backup logic in subscriptions/files, such as uploading to another Gist or backing up/restoring via WebDAV.\n\nReferences:\nhttps://t.me/zhetengsha/1428\nhttps://t.me/zhetengsha/5261",
+            "Requires backend >= 2.23.16.\n\nWhen enabled, scheduled sync uploads the generated artifact to the current sync storage, such as Gist.\n\nWhen disabled, scheduled sync only runs artifact generation and updates the last run time. It does not upload or create a new Gist URL. Use this to refresh caches, or to run custom upload/backup logic in subscriptions/files, such as uploading to another Gist or backing up/restoring via WebDAV.\n\nReferences:\nhttps://telegram.me/zhetengsha/1428\nhttps://telegram.me/zhetengsha/5261",
         },
       },
       cron: {
