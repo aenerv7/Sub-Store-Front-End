@@ -868,6 +868,7 @@ const openPreviewPanel = () => {
       notify: t(`subPage.copyNotify.${shareBtnVisible.value ? "succeedWithShare" : "succeed"}`),
       includeUnsupportedProxyLabel: t("subPage.panel.options.includeUnsupportedProxy"),
       prettyYamlLabel: t("subPage.panel.options.prettyYaml"),
+      displayPreviewInWebPageLabel: t("moreSettingPage.displayPreviewInWebPage"),
       tipsTitle: t(`subPage.panel.tips.title`),
       tipsContent: `${t("subPage.panel.tips.content")}\n${t(
         "syncPage.addArtForm.includeUnsupportedProxy.tips.content",

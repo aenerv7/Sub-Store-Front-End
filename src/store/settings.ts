@@ -530,51 +530,54 @@ export const useSettingsStore = defineStore("settingsStore", {
     async changeAppearanceSetting(data: SettingsPostData) {
       Toast.loading("保存外观设置中...", { cover: true, id: "theme__loading" });
       const { showNotify } = useAppNotifyStore();
-      const forceEditorGroupingMode = Boolean(
-        data.appearanceSetting
-        && !this.hasRemoteEditorGroupingMode
-        && this.hasCachedEditorGroupingMode
-        && isEditorGroupingMode(data.appearanceSetting.editorGroupingMode)
-      );
-      const requestData = data.appearanceSetting
-        ? {
-            ...data,
-            appearanceSetting: createAppearanceSettingPatch(
-              data.appearanceSetting,
-              this.appearanceSetting,
-              { forceEditorGroupingMode },
-            ),
-          }
-        : data;
-      const res = await settingsApi.setSettings(requestData);
-      if (res?.data?.status === "success" && res?.data?.data) {
-        const hasAppearanceSettingPatch = hasRemoteAppearanceSetting(requestData.appearanceSetting);
-        const responseHasAppearanceSetting = hasRemoteAppearanceSetting(res.data.data.appearanceSetting);
-        const responseHasEditorGroupingMode = hasRemoteEditorGroupingMode(res.data.data.appearanceSetting);
-        const requestHasEditorGroupingMode = isEditorGroupingMode(requestData.appearanceSetting?.editorGroupingMode);
-        this.hasRemoteAppearanceSetting = this.hasRemoteAppearanceSetting
-          || responseHasAppearanceSetting;
-        this.hasRemoteEditorGroupingMode = responseHasEditorGroupingMode;
-        this.applyAppearanceSetting(
-          hasAppearanceSettingPatch
-            ? {
-                ...this.appearanceSetting,
-                ...requestData.appearanceSetting,
-              }
-            : res.data.data.appearanceSetting,
-          {
-            cacheEditorGroupingMode: responseHasEditorGroupingMode
-              || requestHasEditorGroupingMode
-              || this.hasCachedEditorGroupingMode,
-          },
+      try {
+        const forceEditorGroupingMode = Boolean(
+          data.appearanceSetting
+          && !this.hasRemoteEditorGroupingMode
+          && this.hasCachedEditorGroupingMode
+          && isEditorGroupingMode(data.appearanceSetting.editorGroupingMode)
         );
-      } else {
-        showNotify({
-          title: `保存外观设置失败`,
-          type: "danger",
-        });
+        const requestData = data.appearanceSetting
+          ? {
+              ...data,
+              appearanceSetting: createAppearanceSettingPatch(
+                data.appearanceSetting,
+                this.appearanceSetting,
+                { forceEditorGroupingMode },
+              ),
+            }
+          : data;
+        const res = await settingsApi.setSettings(requestData);
+        if (res?.data?.status === "success" && res?.data?.data) {
+          const hasAppearanceSettingPatch = hasRemoteAppearanceSetting(requestData.appearanceSetting);
+          const responseHasAppearanceSetting = hasRemoteAppearanceSetting(res.data.data.appearanceSetting);
+          const responseHasEditorGroupingMode = hasRemoteEditorGroupingMode(res.data.data.appearanceSetting);
+          const requestHasEditorGroupingMode = isEditorGroupingMode(requestData.appearanceSetting?.editorGroupingMode);
+          this.hasRemoteAppearanceSetting = this.hasRemoteAppearanceSetting
+            || responseHasAppearanceSetting;
+          this.hasRemoteEditorGroupingMode = responseHasEditorGroupingMode;
+          this.applyAppearanceSetting(
+            hasAppearanceSettingPatch
+              ? {
+                  ...this.appearanceSetting,
+                  ...requestData.appearanceSetting,
+                }
+              : res.data.data.appearanceSetting,
+            {
+              cacheEditorGroupingMode: responseHasEditorGroupingMode
+                || requestHasEditorGroupingMode
+                || this.hasCachedEditorGroupingMode,
+            },
+          );
+        } else {
+          showNotify({
+            title: `保存外观设置失败`,
+            type: "danger",
+          });
+        }
+      } finally {
+        Toast.hide("theme__loading");
       }
-      Toast.hide("theme__loading");
     },
   },
 });

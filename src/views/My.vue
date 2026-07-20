@@ -78,18 +78,20 @@
             />
             {{ $t(`myPage.storage.manual.restore`) }}
           </nut-button>
-          <a :href="host + '/api/storage'" target="_blank">
-            <nut-button
-              class="download-btn"
-              type="primary"
-              size="small"
-            >
-              <font-awesome-icon
-                icon="fa-solid fa-cloud-arrow-down"
-              />
-              {{ $t(`myPage.storage.manual.backup`) }}
-            </nut-button>
-          </a>
+          <nut-button
+            class="download-btn"
+            type="primary"
+            size="small"
+            :disabled="backupIsLoading"
+            :loading="backupIsLoading"
+            @click="downloadBackup"
+          >
+            <font-awesome-icon
+              v-if="!backupIsLoading"
+              icon="fa-solid fa-cloud-arrow-down"
+            />
+            {{ $t(`myPage.storage.manual.backup`) }}
+          </nut-button>
         </div>
         <div v-else class="actions">
           <nut-button
@@ -1126,6 +1128,7 @@ const setDisplayInfo = () => {
 const downloadIsLoading = ref(false);
 const uploadIsLoading = ref(false);
 const restoreIsLoading = ref(false);
+const backupIsLoading = ref(false);
 const syncIsDisabled = computed(() => {
   return (
     uploadIsLoading.value ||
@@ -1142,6 +1145,38 @@ const desText = computed(() => {
     return [t(`myPage.placeholder.uploadTime`), butifyDate(syncTime.value)];
   }
 });
+const downloadBackup = async () => {
+  backupIsLoading.value = true;
+  try {
+    const res = await useSettingsApi().downloadBackup();
+    if (!res || res.status < 200 || res.status >= 300) throw new Error('backup failed');
+
+    const disposition = res.headers?.['content-disposition'] || '';
+    const filename = decodeURIComponent(
+      disposition.match(/filename="?([^";]+)"?/i)?.[1] || 'sub-store_data.json',
+    );
+    const url = URL.createObjectURL(new Blob([res.data], { type: 'application/octet-stream' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showNotify({
+      type: "success",
+      title: t(`myPage.notify.download.succeed`),
+    });
+  } catch (e) {
+    showNotify({
+      type: "danger",
+      title: t(`myPage.notify.download.failed`),
+    });
+    console.error(e);
+  } finally {
+    backupIsLoading.value = false;
+  }
+};
 const fileChange = async (event) => {
   const file = event.target.files[0];
   if(!file) return
