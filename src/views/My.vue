@@ -683,6 +683,7 @@ import { useAppNotifyStore } from "@/store/appNotify";
 import { useGlobalStore } from "@/store/global";
 import { useSettingsStore } from "@/store/settings";
 import { butifyDate } from "@/utils/butifyDate";
+import { downloadBlobResponse } from "@/utils/download";
 import { createGithubProxyUrlRewriter } from "@/utils/githubProxy";
 import { initStores } from "@/utils/initApp";
 import { storeToRefs } from "pinia";
@@ -1149,20 +1150,7 @@ const downloadBackup = async () => {
   backupIsLoading.value = true;
   try {
     const res = await useSettingsApi().downloadBackup();
-    if (!res || res.status < 200 || res.status >= 300) throw new Error('backup failed');
-
-    const disposition = res.headers?.['content-disposition'] || '';
-    const filename = decodeURIComponent(
-      disposition.match(/filename="?([^";]+)"?/i)?.[1] || 'sub-store_data.json',
-    );
-    const url = URL.createObjectURL(new Blob([res.data], { type: 'application/octet-stream' }));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadBlobResponse(res, 'sub-store_data.json');
     showNotify({
       type: "success",
       title: t(`myPage.notify.download.succeed`),
